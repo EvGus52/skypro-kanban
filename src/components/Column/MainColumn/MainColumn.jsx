@@ -1,5 +1,3 @@
-
-
 function MainColumn({ title, children }) {
   return (
     <div className="main__column">

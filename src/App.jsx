@@ -1,12 +1,14 @@
 import React from "react";
 import "./App.css";
-import PopExit from "./components/PopExit/PopExit";
-import PopNewCard from "./components/PopNewCard/PopNewCard";
-import PopBrowse from "./components/PopBrowse/PopBrowse";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
-import MainColumn from "./components/MainColumn/MainColumn";
+import Column from "./components/Column/Column";
 import Card from "./components/Card/Card";
+import Calendar from "./components/Calendar/Calendar";
+import PopBrowse from "./components/popups/PopBrowse/PopBrowse";
+import PopNewCard from "./components/popups/PopNewCard/PopNewCard";
+import PopUser from "./components/popups/PopUser/PopUser";
+import PopExit from "./components/popups/PopExit/PopExit";
 
 function App() {
   return (
@@ -14,25 +16,28 @@ function App() {
       <PopExit />
       <PopNewCard />
       <PopBrowse />
+      <PopUser />
       <Header />
       <Main>
-        <MainColumn title="Без статуса">
+        <Column title="Без статуса">
           <Card
             theme="_orange"
             themeText="Web Design"
             title="Название задачи"
             date="30.10.23"
-          />
-        </MainColumn>
-        <MainColumn title="Нужно сделать">
+          >
+            <Calendar />
+          </Card>
+        </Column>
+        <Column title="Нужно сделать">
           <Card
             theme="_green"
             themeText="Research"
             title="Название задачи"
             date="30.10.23"
           />
-        </MainColumn>
-        <MainColumn title="В работе">
+        </Column>
+        <Column title="В работе">
           <Card
             theme="_orange"
             themeText="Web Design"
@@ -51,23 +56,23 @@ function App() {
             title="Название задачи"
             date="30.10.23"
           />
-        </MainColumn>
-        <MainColumn title="Тестирование">
+        </Column>
+        <Column title="Тестирование">
           <Card
             theme="_green"
             themeText="Research"
             title="Название задачи"
             date="30.10.23"
           />
-        </MainColumn>
-        <MainColumn title="Готово">
+        </Column>
+        <Column title="Готово">
           <Card
             theme="_green"
             themeText="Research"
             title="Название задачи"
             date="30.10.23"
           />
-        </MainColumn>
+        </Column>
       </Main>
     </div>
   );
