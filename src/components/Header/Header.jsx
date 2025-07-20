@@ -4,16 +4,16 @@ function Header() {
       <div className="header__block">
         <div className="header__logo _show _light">
           <a href="" target="_blank">
-            <img src="public/logo.png" alt="logo" />
+            <img src="/logo.png" alt="logo" />
           </a>
         </div>
         <div className="header__logo _show _dark">
           <a href="" target="_blank">
-            <img src="public/logo_dark.png" alt="logo" />
+            <img src="/logo_dark.png" alt="logo" />
           </a>
         </div>
         <nav className="header__nav">
-          <button className="header__btn-mainNew _hover01" id="btnMainNew">
+          <button className="header__btn-main-new _hover01" id="btnMainNew">
             <a href="#popNewCard">Создать новую задачу</a>
           </button>
           <a href="#user-set" target="_blank">
@@ -22,19 +22,22 @@ function Header() {
                 <p>ID пользователя</p>
               </div>
               <div className="user__img">
-                <img src="public/avatar.png" alt="avatar" />
+                <img src="/avatar.png" alt="avatar" />
               </div>
             </div>
           </a>
-          <div className="header__popUserSet popUserSet" id="user-setTarget">
+          <div
+            className="header__pop-user-set pop-user-set"
+            id="user-setTarget"
+          >
             <a href="#">x</a>
-            <div className="popUserSet__name">
+            <div className="pop-user-set__name">
               <p>Имя пользователя</p>
             </div>
-            <div className="popUserSet__mail">
+            <div className="pop-user-set__mail">
               <p>usermail@mail.com</p>
             </div>
-            <div className="popUserSet__theme">
+            <div className="pop-user-set__theme">
               <p>Темная тема</p>
               <input type="checkbox" className="checkbox" name="checkbox" />
               <label htmlFor="checkbox" className="label">

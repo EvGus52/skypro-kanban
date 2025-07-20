@@ -1,5 +1,3 @@
-import React from "react";
-
 function PopUser() {
   return (
     <div className="pop-user">

@@ -1,5 +1,3 @@
-import React from "react";
-
 function Card({ theme, themeText, title, date, link = "", children }) {
   return (
     <div className="cards__item">
