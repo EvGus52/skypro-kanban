@@ -1,80 +1,40 @@
-import "./App.css";
-import Header from "./components/Header/Header";
+import React from "react";
 import Main from "./components/Main/Main";
+import Header from "./components/Header/Header";
 import Column from "./components/Column/Column";
 import Card from "./components/Card/Card";
 import Calendar from "./components/Calendar/Calendar";
 import PopBrowse from "./components/popups/PopBrowse/PopBrowse";
 import PopNewCard from "./components/popups/PopNewCard/PopNewCard";
 import PopUser from "./components/popups/PopUser/PopUser";
-import PopExit from "./components/popups/PopExit/PopExit";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="wrapper">
-      <PopExit />
-      <PopNewCard />
-      <PopBrowse />
-      <PopUser />
-      <Header />
-      <Main>
-        <Column title="Без статуса">
-          <Card
-            theme="_orange"
-            themeText="Web Design"
-            title="Название задачи"
-            date="30.10.23"
-          >
-            <Calendar />
-          </Card>
-        </Column>
-        <Column title="Нужно сделать">
-          <Card
-            theme="_green"
-            themeText="Research"
-            title="Название задачи"
-            date="30.10.23"
-          />
-        </Column>
-        <Column title="В работе">
-          <Card
-            theme="_orange"
-            themeText="Web Design"
-            title="Название задачи"
-            date="30.10.23"
-          />
-          <Card
-            theme="_purple"
-            themeText="Copywriting"
-            title="Название задачи"
-            date="30.10.23"
-          />
-          <Card
-            theme="_orange"
-            themeText="Web Design"
-            title="Название задачи"
-            date="30.10.23"
-          />
-        </Column>
-        <Column title="Тестирование">
-          <Card
-            theme="_green"
-            themeText="Research"
-            title="Название задачи"
-            date="30.10.23"
-          />
-        </Column>
-        <Column title="Готово">
-          <Card
-            theme="_green"
-            themeText="Research"
-            title="Название задачи"
-            date="30.10.23"
-          />
-        </Column>
-      </Main>
-    </div>
-  );
-}
+const App = () => (
+  <div className="wrapper">
+    <PopNewCard />
+    <PopBrowse />
+    <PopUser />
+    <Header />
+    <Main>
+      {/* Здесь будут колонки и карточки */}
+      <Column title="Без статуса">
+        <Card />
+      </Column>
+      <Column title="Нужно сделать">
+        <Card />
+      </Column>
+      <Column title="В работе">
+        <Card />
+      </Column>
+      <Column title="Тестирование">
+        <Card />
+      </Column>
+      <Column title="Готово">
+        <Card />
+      </Column>
+    </Main>
+    <Calendar />
+  </div>
+);
 
 export default App;
