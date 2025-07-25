@@ -42,6 +42,10 @@ body {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
   color: #000000;
 }
+.center {
+  padding-left: calc(50% - 600px);
+  padding-right: calc(50% - 600px);
+}
 
 .wrapper {
   max-width: 100%;
@@ -49,7 +53,7 @@ body {
   min-height: 100vh;
   overflow: hidden;
   background-color: #f1f1f1;
-}
+  }
 
 .container {
   max-width: 1260px;
@@ -408,6 +412,7 @@ body {
 .calendar {
   width: 182px;
   margin-bottom: 20px;
+  display: none;
 }
 .calendar__ttl {
   margin-bottom: 14px;
@@ -714,6 +719,7 @@ body {
 }
 
 ._hide {
+  
   display: none;
 }
 
