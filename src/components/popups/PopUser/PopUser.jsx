@@ -2,7 +2,7 @@ import React from "react";
 
 const PopUser = () => (
   <div className="header__pop-user-set pop-user-set" id="user-set-target">
-    {/* ...сюда можно вставить разметку пользователя... */}
+    {/* <a href="">x</a> */}
     <p className="pop-user-set__name">Ivan Ivanov</p>
     <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
     <div className="pop-user-set__theme">
