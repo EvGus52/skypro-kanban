@@ -7,6 +7,7 @@ import Calendar from "./components/Calendar/Calendar";
 import PopBrowse from "./components/popups/PopBrowse/PopBrowse";
 import PopNewCard from "./components/popups/PopNewCard/PopNewCard";
 import PopUser from "./components/popups/PopUser/PopUser";
+import PopExit from "./components/popups/PopExit/PopExit";
 import "./App.css";
 
 const App = () => (
@@ -14,26 +15,25 @@ const App = () => (
     <PopNewCard />
     <PopBrowse />
     <PopUser />
+    <PopExit />
     <Header />
     <Main>
-      {/* Здесь будут колонки и карточки */}
       <Column title="Без статуса">
-        <Card />
+        <Card theme="orange" title="Web Design" />
       </Column>
       <Column title="Нужно сделать">
-        <Card />
+        <Card theme="green" title="Research" />
       </Column>
       <Column title="В работе">
-        <Card />
+        <Card theme="purple" title="Copywriting" />
       </Column>
       <Column title="Тестирование">
-        <Card />
+        <Card theme="green" title="Research" />
       </Column>
       <Column title="Готово">
-        <Card />
+        <Card theme="green" title="Research" />
       </Column>
     </Main>
-    <Calendar />
   </div>
 );
 
