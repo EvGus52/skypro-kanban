@@ -6,32 +6,50 @@ import Card from "./components/Card/Card";
 import PopBrowse from "./components/popups/PopBrowse/PopBrowse";
 import PopNewCard from "./components/popups/PopNewCard/PopNewCard";
 import PopExit from "./components/popups/PopExit/PopExit";
+import { cardsList } from "../data.js";
 import "./App.css";
 
-const App = () => (
-  <div className="wrapper">
-    <PopNewCard />
-    <PopBrowse />
-    <PopExit />
-    <Header />
-    <Main>
-      <Column title="Без статуса">
-        <Card theme="orange" title="Web Design" />
-      </Column>
-      <Column title="Нужно сделать">
-        <Card theme="green" title="Research" />
-      </Column>
-      <Column title="В работе">
-        <Card theme="purple" title="Copywriting" />
-      </Column>
-      <Column title="Тестирование">
-        <Card theme="green" title="Research" />
-      </Column>
-      <Column title="Готово">
-        <Card theme="green" title="Research" />
-      </Column>
-    </Main>
-  </div>
-);
+const App = () => {
+  // Функция для фильтрации карточек по статусу
+  const getCardsByStatus = (status) => {
+    return cardsList.filter((card) => card.status === status);
+  };
+
+  return (
+    <div className="wrapper">
+      <PopNewCard />
+      <PopBrowse />
+      <PopExit />
+      <Header />
+      <Main>
+        <Column title="Без статуса">
+          {getCardsByStatus("Без статуса").map((card) => (
+            <Card key={card.id} card={card} />
+          ))}
+        </Column>
+        <Column title="Нужно сделать">
+          {getCardsByStatus("Нужно сделать").map((card) => (
+            <Card key={card.id} card={card} />
+          ))}
+        </Column>
+        <Column title="В работе">
+          {getCardsByStatus("В работе").map((card) => (
+            <Card key={card.id} card={card} />
+          ))}
+        </Column>
+        <Column title="Тестирование">
+          {getCardsByStatus("Тестирование").map((card) => (
+            <Card key={card.id} card={card} />
+          ))}
+        </Column>
+        <Column title="Готово">
+          {getCardsByStatus("Готово").map((card) => (
+            <Card key={card.id} card={card} />
+          ))}
+        </Column>
+      </Main>
+    </div>
+  );
+};
 
 export default App;
