@@ -41,6 +41,7 @@ const Header = () => {
             Ivan Ivanov
           </HeaderUser>
           <HeaderPopUserSet
+            className="pop-user-set"
             id="user-set-target"
             style={{ display: isUserMenuOpen ? "block" : "none" }}
           >

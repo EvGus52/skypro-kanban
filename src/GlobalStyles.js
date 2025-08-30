@@ -16,15 +16,12 @@ export const GlobalStyles = createGlobalStyle`
   a:visited {
     text-decoration: none;
     cursor: pointer;
-    color: inherit;
   }
 
   button,
   ._btn {
     cursor: pointer;
     outline: none;
-    border: none;
-    background: none;
   }
 
   ul li {

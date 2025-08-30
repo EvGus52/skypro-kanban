@@ -79,8 +79,6 @@ export const HeaderUser = styled.a`
   font-size: 14px;
   line-height: 20px;
   color: #565eef;
-  text-decoration: none;
-  cursor: pointer;
 
   &::after {
     content: "";
