@@ -27,13 +27,19 @@ const Card = ({ card }) => {
   };
 
   const theme = getTheme(card.topic);
+  const themeColors = Colors[theme];
 
   return (
     <CardsItem>
       <CardsCard>
         <CardGroup>
-          <CardTheme className={`_${theme}`}>
-            <p className={`_${theme}`}>{card.topic}</p>
+          <CardTheme
+            style={{
+              backgroundColor: themeColors.background,
+              color: themeColors.color,
+            }}
+          >
+            <p style={{ color: themeColors.color }}>{card.topic}</p>
           </CardTheme>
           <a href="#popBrowse" target="_self">
             <CardBtn>
