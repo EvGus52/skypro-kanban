@@ -1,4 +1,14 @@
 import React from "react";
+import {
+  CardsItem,
+  CardsCard,
+  CardGroup,
+  CardTheme,
+  CardBtn,
+  CardTitle,
+  CardContent,
+  CardDate,
+} from "./Card.styled";
 
 const Card = ({ card }) => {
   // Определяем тему на основе topic
@@ -18,25 +28,25 @@ const Card = ({ card }) => {
   const theme = getTheme(card.topic);
 
   return (
-    <div className="cards__item">
-      <div className="cards__card card">
-        <div className="card__group">
-          <div className={`card__theme _${theme}`}>
+    <CardsItem>
+      <CardsCard>
+        <CardGroup>
+          <CardTheme className={`_${theme}`}>
             <p className={`_${theme}`}>{card.topic}</p>
-          </div>
+          </CardTheme>
           <a href="#popBrowse" target="_self">
-            <div className="card__btn">
+            <CardBtn>
               <div></div>
               <div></div>
               <div></div>
-            </div>
+            </CardBtn>
           </a>
-        </div>
-        <div className="card__content">
+        </CardGroup>
+        <CardContent>
           <a href="" target="_blank">
-            <h3 className="card__title">{card.title}</h3>
+            <CardTitle>{card.title}</CardTitle>
           </a>
-          <div className="card__date">
+          <CardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="13"
@@ -66,10 +76,10 @@ const Card = ({ card }) => {
               </defs>
             </svg>
             <p>{card.date}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+          </CardDate>
+        </CardContent>
+      </CardsCard>
+    </CardsItem>
   );
 };
 
