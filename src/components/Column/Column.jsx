@@ -1,12 +1,14 @@
 import React from "react";
+import { MainColumn, ColumnTitle } from "./Column.styled";
+import { CardsContainer } from "../Card/Card.styled";
 
 const Column = ({ title, children }) => (
-  <div className="main__column column">
-    <div className="column__title">
+  <MainColumn>
+    <ColumnTitle>
       <p>{title}</p>
-    </div>
-    <div className="cards">{children}</div>
-  </div>
+    </ColumnTitle>
+    <CardsContainer>{children}</CardsContainer>
+  </MainColumn>
 );
 
 export default Column;

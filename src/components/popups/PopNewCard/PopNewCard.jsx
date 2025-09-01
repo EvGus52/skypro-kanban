@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Colors } from "../../../Colors";
 
 const PopNewCard = () => {
   return (
@@ -145,14 +146,32 @@ const PopNewCard = () => {
             <div className="pop-new-card__categories categories">
               <p className="categories__p subttl">Категория</p>
               <div className="categories__themes">
-                <div className="categories__theme _orange _active-category">
-                  <p className="_orange">Web Design</p>
+                <div
+                  className="categories__theme _active-category"
+                  style={{
+                    backgroundColor: Colors.orange.background,
+                    color: Colors.orange.color,
+                  }}
+                >
+                  <p style={{ color: Colors.orange.color }}>Web Design</p>
                 </div>
-                <div className="categories__theme _green">
-                  <p className="_green">Research</p>
+                <div
+                  className="categories__theme"
+                  style={{
+                    backgroundColor: Colors.green.background,
+                    color: Colors.green.color,
+                  }}
+                >
+                  <p style={{ color: Colors.green.color }}>Research</p>
                 </div>
-                <div className="categories__theme _purple">
-                  <p className="_purple">Copywriting</p>
+                <div
+                  className="categories__theme"
+                  style={{
+                    backgroundColor: Colors.purple.background,
+                    color: Colors.purple.color,
+                  }}
+                >
+                  <p style={{ color: Colors.purple.color }}>Copywriting</p>
                 </div>
               </div>
             </div>

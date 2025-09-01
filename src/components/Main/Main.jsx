@@ -1,13 +1,12 @@
 import React from "react";
+import { MainContainer, MainBlock, MainContent } from "./Main.styled";
 
 const Main = ({ children }) => (
-  <main className="main">
-    <div className="container">
-      <div className="main__block">
-        <div className="main__content">{children}</div>
-      </div>
-    </div>
-  </main>
+  <MainContainer className="center">
+    <MainBlock>
+      <MainContent>{children}</MainContent>
+    </MainBlock>
+  </MainContainer>
 );
 
 export default Main;
