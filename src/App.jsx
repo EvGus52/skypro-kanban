@@ -9,6 +9,7 @@ import PopExit from "./components/popups/PopExit/PopExit";
 import { cardsList } from "../data.js";
 import { GlobalStyles } from "./GlobalStyles";
 import { Wrapper } from "./Wrapper.styled";
+import SignIn from "./pages/SignIn";
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
