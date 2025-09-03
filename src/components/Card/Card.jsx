@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Colors } from "../../Colors";
 import {
   CardsItem,
@@ -50,9 +51,9 @@ const Card = ({ card }) => {
           </a>
         </CardGroup>
         <CardContent>
-          <a href="" target="_blank">
+          <Link to={`/card/${card.id}`}>
             <CardTitle>{card.title}</CardTitle>
-          </a>
+          </Link>
           <CardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"

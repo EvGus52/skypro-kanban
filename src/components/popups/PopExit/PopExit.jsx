@@ -1,26 +1,65 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Overlay,
+  Container,
+  Block,
+  Title,
+  Form,
+  FormGroup,
+  ExitYes,
+  ExitNo,
+} from "./PopExit.styled";
 
-const PopExit = () => {
+const PopExit = ({ setIsAuth }) => {
+  const navigate = useNavigate();
+
+  const handleExit = (e) => {
+    e.preventDefault();
+
+    if (window.location.hash) {
+      window.location.hash = "";
+    }
+    if (setIsAuth) setIsAuth(false);
+    navigate("/sign-in", { replace: true });
+  };
+
+  const handleStay = (e) => {
+    e.preventDefault();
+
+    if (window.location.hash) {
+      window.location.hash = "";
+    }
+  };
+
   return (
-    <div className="pop-exit" id="popExit">
-      <div className="pop-exit__container">
-        <div className="pop-exit__block">
-          <div className="pop-exit__ttl">
-            <h2>Выйти из аккаунта?</h2>
-          </div>
-          <form className="pop-exit__form" id="formExit" action="#">
-            <div className="pop-exit__form-group">
-              <button className="pop-exit__exit-yes _hover01" id="exitYes">
-                <a href="modal/signin.html">Да, выйти</a>
-              </button>
-              <button className="pop-exit__exit-no _hover03" id="exitNo">
-                <a href="main.html">Нет, остаться</a>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    <Overlay className="pop-exit" id="popExit">
+      <Container className="pop-exit__container">
+        <Block className="pop-exit__block">
+          <Title className="pop-exit__ttl">Выйти из аккаунта?</Title>
+          <Form className="pop-exit__form" id="formExit" action="#">
+            <FormGroup className="pop-exit__form-group">
+              <ExitYes
+                className="_hover01"
+                id="exitYes"
+                type="button"
+                onClick={handleExit}
+              >
+                Да, выйти
+              </ExitYes>
+              <ExitNo
+                className="_hover03"
+                id="exitNo"
+                type="button"
+                onClick={handleStay}
+              >
+                Нет, остаться
+              </ExitNo>
+            </FormGroup>
+          </Form>
+        </Block>
+      </Container>
+    </Overlay>
   );
 };
 
