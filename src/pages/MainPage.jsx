@@ -4,8 +4,6 @@ import Header from "../components/Header/Header";
 import Main from "../components/Main/Main";
 import Column from "../components/Column/Column";
 import Card from "../components/Card/Card";
-import PopBrowse from "../components/popups/PopBrowse/PopBrowse";
-import PopNewCard from "../components/popups/PopNewCard/PopNewCard";
 import PopExit from "../components/popups/PopExit/PopExit";
 import { Wrapper } from "../Wrapper.styled";
 import { cardsList } from "../../data.js";
@@ -18,8 +16,6 @@ const MainPage = ({ loading, setIsAuth }) => {
 
   return (
     <Wrapper>
-      <PopNewCard />
-      <PopBrowse />
       <PopExit setIsAuth={setIsAuth} />
       <Header />
       {loading ? (

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   HeaderContainer,
   HeaderBlock,
@@ -31,7 +32,7 @@ const Header = () => {
         </HeaderLogo>
         <HeaderNav>
           <HeaderBtnMainNew className="_hover01" id="btnMainNew">
-            <a href="#popNewCard">Создать новую задачу</a>
+            <Link to="/card/new">Создать новую задачу</Link>
           </HeaderBtnMainNew>
           <HeaderUser
             className="_hover02"

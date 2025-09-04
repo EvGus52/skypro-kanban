@@ -42,13 +42,13 @@ const Card = ({ card }) => {
           >
             <p style={{ color: themeColors.color }}>{card.topic}</p>
           </CardTheme>
-          <a href="#popBrowse" target="_self">
+          <Link to={`/card/${card.id}/browse`}>
             <CardBtn>
               <div></div>
               <div></div>
               <div></div>
             </CardBtn>
-          </a>
+          </Link>
         </CardGroup>
         <CardContent>
           <Link to={`/card/${card.id}`}>

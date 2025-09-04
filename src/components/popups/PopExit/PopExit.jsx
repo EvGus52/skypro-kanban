@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Overlay,
@@ -14,28 +14,44 @@ import {
 const PopExit = ({ setIsAuth }) => {
   const navigate = useNavigate();
 
+  const handleClose = useCallback(() => {
+    window.location.href = window.location.origin + "/";
+  }, []);
+
   const handleExit = (e) => {
     e.preventDefault();
-
-    if (window.location.hash) {
-      window.location.hash = "";
-    }
     if (setIsAuth) setIsAuth(false);
     navigate("/sign-in", { replace: true });
   };
 
   const handleStay = (e) => {
     e.preventDefault();
-
-    if (window.location.hash) {
-      window.location.hash = "";
-    }
+    handleClose();
   };
 
+  // Обработка клавиши Escape и блокировка прокрутки
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        handleClose();
+      }
+    };
+
+    // Блокируем прокрутку страницы когда модальное окно открыто
+    document.body.style.overflow = "hidden";
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      // Восстанавливаем прокрутку при закрытии модального окна
+      document.body.style.overflow = "unset";
+    };
+  }, [handleClose]);
+
   return (
-    <Overlay className="pop-exit" id="popExit">
+    <Overlay className="pop-exit" id="popExit" onClick={handleClose}>
       <Container className="pop-exit__container">
-        <Block className="pop-exit__block">
+        <Block className="pop-exit__block" onClick={(e) => e.stopPropagation()}>
           <Title className="pop-exit__ttl">Выйти из аккаунта?</Title>
           <Form className="pop-exit__form" id="formExit" action="#">
             <FormGroup className="pop-exit__form-group">
