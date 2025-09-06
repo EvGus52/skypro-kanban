@@ -12,27 +12,39 @@ import PopBrowse from "../components/popups/PopBrowse/PopBrowse";
 import PopNewCard from "../components/popups/PopNewCard/PopNewCard";
 
 const AppRoutes = () => {
-  const [isAuth, setIsAuth] = useState(true); // Временно для тестирования, в будущем будет false
+  const [isAuth, setIsAuth] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer);
+    // Проверяем, есть ли токен в localStorage
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    if (token && user) {
+      setIsAuth(true);
+    }
+    setLoading(false);
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsAuth(false);
+  };
 
   return (
     <Routes>
       <Route element={<PrivateRoute isAuth={isAuth} />}>
         <Route
           path="/"
-          element={<MainPage loading={loading} setIsAuth={setIsAuth} />}
+          element={<MainPage loading={loading} setIsAuth={handleLogout} />}
         >
           <Route path="card/:id/browse" element={<PopBrowse />} />
           <Route path="card/new" element={<PopNewCard />} />
         </Route>
         <Route path="/card/add" element={<NewCardPage />} />
         <Route path="/card/:id" element={<CardPage />} />
-        <Route path="/exit" element={<ExitPage setIsAuth={setIsAuth} />} />
+        <Route path="/exit" element={<ExitPage setIsAuth={handleLogout} />} />
       </Route>
 
       <Route path="/sign-in" element={<SignIn setIsAuth={setIsAuth} />} />
