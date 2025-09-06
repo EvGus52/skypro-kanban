@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { Colors } from "../../../Colors";
 import { cardsList } from "../../../../data";
 
@@ -360,13 +360,8 @@ const PopBrowse = () => {
                   <a href="#">Удалить задачу</a>
                 </button>
               </div>
-              <button
-                className="btn-browse__close _btn-bg _hover01"
-                onClick={handleClose}
-              >
-                <a href="#" onClick={(e) => e.preventDefault()}>
-                  Закрыть
-                </a>
+              <button className="btn-browse__close _btn-bg _hover01">
+                <Link to="/">Закрыть</Link>
               </button>
             </div>
             <div className="pop-browse__btn-edit _hide">
@@ -384,13 +379,8 @@ const PopBrowse = () => {
                   <a href="#">Удалить задачу</a>
                 </button>
               </div>
-              <button
-                className="btn-edit__close _btn-bg _hover01"
-                onClick={handleClose}
-              >
-                <a href="#" onClick={(e) => e.preventDefault()}>
-                  Закрыть
-                </a>
+              <button className="btn-edit__close _btn-bg _hover01">
+                <Link to="/">Закрыть</Link>
               </button>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Colors } from "../../../Colors";
 
 const PopNewCard = () => {
@@ -37,16 +37,9 @@ const PopNewCard = () => {
         >
           <div className="pop-new-card__content">
             <h3 className="pop-new-card__ttl">Создание задачи</h3>
-            <a
-              href="#"
-              className="pop-new-card__close"
-              onClick={(e) => {
-                e.preventDefault();
-                handleClose();
-              }}
-            >
+            <Link to="/" className="pop-new-card__close">
               &#10006;
-            </a>
+            </Link>
             <div className="pop-new-card__wrap">
               <form
                 className="pop-new-card__form form-new"
