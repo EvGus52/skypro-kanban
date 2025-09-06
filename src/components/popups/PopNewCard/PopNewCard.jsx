@@ -1,16 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useCallback } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { Colors } from "../../../Colors";
 
 const PopNewCard = () => {
+  const navigate = useNavigate();
+
+  const handleClose = useCallback(() => {
+    navigate("/");
+  }, [navigate]);
+
+  // Обработка клавиши Escape и блокировка прокрутки
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        handleClose();
+      }
+    };
+
+    // Блокируем прокрутку страницы когда модальное окно открыто
+    document.body.style.overflow = "hidden";
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      // Восстанавливаем прокрутку при закрытии модального окна
+      document.body.style.overflow = "unset";
+    };
+  }, [handleClose]);
+
   return (
     <div className="pop-new-card" id="popNewCard">
-      <div className="pop-new-card__container">
-        <div className="pop-new-card__block">
+      <div className="pop-new-card__container" onClick={handleClose}>
+        <div
+          className="pop-new-card__block"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="pop-new-card__content">
             <h3 className="pop-new-card__ttl">Создание задачи</h3>
-            <a href="#" className="pop-new-card__close">
+            <Link to="/" className="pop-new-card__close">
               &#10006;
-            </a>
+            </Link>
             <div className="pop-new-card__wrap">
               <form
                 className="pop-new-card__form form-new"
@@ -175,7 +204,11 @@ const PopNewCard = () => {
                 </div>
               </div>
             </div>
-            <button className="form-new__create _hover01" id="btnCreate">
+            <button
+              className="form-new__create _hover01"
+              id="btnCreate"
+              onClick={handleClose}
+            >
               Создать задачу
             </button>
           </div>

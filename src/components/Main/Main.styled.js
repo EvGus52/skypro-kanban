@@ -40,3 +40,9 @@ export const MainColumn = styled.div`
 
 
 
+
+
+
+
+
+

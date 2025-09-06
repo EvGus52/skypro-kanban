@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const PopUser = () => (
   <div className="header__pop-user-set pop-user-set" id="user-set-target">
@@ -10,7 +11,7 @@ const PopUser = () => (
       <input type="checkbox" className="checkbox" name="checkbox" />
     </div>
     <button type="button" className="_hover03">
-      <a href="#popExit">Выйти</a>
+      <Link to="/exit">Выйти</Link>
     </button>
   </div>
 );
