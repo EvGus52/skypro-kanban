@@ -8,6 +8,7 @@ import {
   CardTheme,
   CardBtn,
   CardTitle,
+  CardDescription,
   CardContent,
   CardDate,
 } from "./Card.styled";
@@ -25,6 +26,16 @@ const Card = ({ card }) => {
       default:
         return "orange";
     }
+  };
+
+  // Функция для форматирования даты в формат "30.10.23"
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear().toString().slice(-2);
+    return `${day}.${month}.${year}`;
   };
 
   const theme = getTheme(card.topic);
@@ -54,6 +65,9 @@ const Card = ({ card }) => {
           <Link to={`/card/${card.id}`}>
             <CardTitle>{card.title}</CardTitle>
           </Link>
+          {card.description && (
+            <CardDescription>{card.description}</CardDescription>
+          )}
           <CardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +97,7 @@ const Card = ({ card }) => {
                 </clipPath>
               </defs>
             </svg>
-            <p>{card.date}</p>
+            <p>{formatDate(card.date)}</p>
           </CardDate>
         </CardContent>
       </CardsCard>
