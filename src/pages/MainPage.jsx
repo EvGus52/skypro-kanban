@@ -9,7 +9,7 @@ import { Wrapper } from "../Wrapper.styled";
 import { fetchTasks } from "../services/Api.js";
 import { TaskProvider } from "../context/TaskContextProvider";
 
-const MainPage = ({ setIsAuth }) => {
+const MainPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [tasks, setTasks] = useState([]);
@@ -46,7 +46,6 @@ const MainPage = ({ setIsAuth }) => {
       ) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        setIsAuth(false);
         navigate("/sign-in");
         return;
       }
@@ -55,16 +54,16 @@ const MainPage = ({ setIsAuth }) => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [navigate]);
 
   // Функция для обновления задач (можно вызвать из других компонентов)
   const refreshTasks = useCallback(() => {
     getTasks();
-  }, []);
+  }, [getTasks]);
 
   useEffect(() => {
     getTasks();
-  }, []);
+  }, [getTasks]);
 
   const getCardsByStatus = (status) =>
     tasks.filter((card) => card.status === status);
@@ -72,7 +71,7 @@ const MainPage = ({ setIsAuth }) => {
   return (
     <TaskProvider refreshTasks={refreshTasks}>
       <Wrapper>
-        <PopExit setIsAuth={setIsAuth} />
+        <PopExit />
         <Header />
 
         {/* Отображение состояния загрузки */}

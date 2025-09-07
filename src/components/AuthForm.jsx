@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Wrapper,
@@ -12,9 +12,11 @@ import {
 } from "./AuthForm.styled";
 import { signIn, signUp } from "../services/Auth.js";
 import BaseInput from "./BaseInput/BaseInput";
+import { AuthContext } from "../context/AuthContext";
 
-const AuthForm = ({ isSignUp = false, setIsAuth }) => {
+const AuthForm = ({ isSignUp }) => {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   // состояние полей
   const [formData, setFormData] = useState({
@@ -92,8 +94,7 @@ const AuthForm = ({ isSignUp = false, setIsAuth }) => {
         : await signUp(formData);
 
       if (data) {
-        setIsAuth(true);
-        localStorage.setItem("user", JSON.stringify(data));
+        login(data);
         localStorage.setItem("token", data.token);
         navigate("/");
       }
