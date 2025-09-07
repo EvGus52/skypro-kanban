@@ -86,7 +86,24 @@ export const CardTitle = styled.h3`
   font-weight: 500;
   line-height: 18px;
   color: #000000;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 180px;
+`;
+
+export const CardDescription = styled.p`
+  font-size: 12px;
+  line-height: 16px;
+  color: #5e6c84;
+  margin-bottom: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 180px;
 `;
 
 export const CardContent = styled.div`
