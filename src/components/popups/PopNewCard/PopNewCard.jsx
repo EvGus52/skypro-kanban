@@ -2,12 +2,13 @@ import React, { useEffect, useCallback, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Colors } from "../../../Colors";
 import { postTask } from "../../../services/Api";
-import { useTaskContext } from "../../../hooks/useTaskContext";
+import { useContext } from "react";
+import { TaskContext } from "../../../context/TaskContext";
 import Calendar from "../../Calendar/Calendar";
 
 const PopNewCard = () => {
   const navigate = useNavigate();
-  const { refreshTasks } = useTaskContext();
+  const { addTask } = useContext(TaskContext);
 
   // Состояние формы
   const [formData, setFormData] = useState({
@@ -71,10 +72,8 @@ const PopNewCard = () => {
 
       console.log("Отправляем данные задачи:", taskData);
 
-      await postTask({ token, task: taskData });
-
-      // Обновляем список задач на главной странице
-      refreshTasks();
+      // Используем addTask из контекста (автоматически обновит список)
+      await addTask(taskData);
 
       // После успешного создания задачи переходим на главную
       navigate("/");
