@@ -48,8 +48,12 @@ const AuthForm = ({ isSignUp }) => {
     }
 
     if (!formData.login.trim()) {
-      newErrors.login = "Логин обязателен";
+      newErrors.login = "Эл. почта обязательна";
       setError("Заполните все поля");
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.login)) {
+      newErrors.login = "Введите корректный email";
+      setError("Введите корректный email");
       isValid = false;
     }
 
@@ -154,10 +158,10 @@ const AuthForm = ({ isSignUp }) => {
               )}
               <div>
                 <BaseInput
-                  type="text"
+                  type="email"
                   name="login"
                   id={isSignUp ? "loginReg" : "formlogin"}
-                  placeholder="Логин"
+                  placeholder="Эл. почта"
                   value={formData.login}
                   onChange={handleChange}
                   error={!!errors.login}

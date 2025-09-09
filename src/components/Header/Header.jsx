@@ -19,14 +19,6 @@ const Header = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
   };
 
-  // Логируем данные пользователя для отладки
-  console.log("👤 Header: Данные пользователя:", user);
-
-  // Если пользователь не авторизован, не показываем меню
-  if (!user) {
-    return null;
-  }
-
   return (
     <HeaderContainer className="center">
       <HeaderBlock>
