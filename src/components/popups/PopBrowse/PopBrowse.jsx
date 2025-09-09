@@ -374,22 +374,23 @@ const PopBrowse = () => {
                       }`}
                       style={{
                         backgroundColor:
-                          editData.status === status ? "#94A6BE" : "#f5f5f5",
-                        color: editData.status === status ? "white" : "#666",
+                          editData.status === status
+                            ? "#94A6BE"
+                            : "transparent",
+                        color: editData.status === status ? "white" : "#94a6be",
                         cursor: "pointer",
-                        border: "1px solid #ddd",
-                        borderRadius: "4px",
-                        padding: "8px 12px",
-                        margin: "4px",
-                        display: "inline-block",
+                        border:
+                          editData.status === status
+                            ? "0.7px solid #94A6BE"
+                            : "0.7px solid rgba(148, 166, 190, 0.4)",
                       }}
                       onClick={() => handleEditStatusSelect(status)}
                     >
                       <p
                         style={{
-                          color: editData.status === status ? "white" : "#666",
+                          color:
+                            editData.status === status ? "white" : "#94a6be",
                           margin: 0,
-                          fontSize: "14px",
                         }}
                       >
                         {status}
