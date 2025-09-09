@@ -12,7 +12,9 @@ export const TaskProvider = ({ children }) => {
   // Загружаем задачи при монтировании компонента
   useEffect(() => {
     const loadTasks = async () => {
-      if (!user) {
+      // Проверяем наличие пользователя и токена
+      const token = localStorage.getItem("token");
+      if (!user || !token) {
         setTasks([]);
         return;
       }
@@ -20,7 +22,11 @@ export const TaskProvider = ({ children }) => {
       try {
         setLoading(true);
         setError("");
-        const token = localStorage.getItem("token");
+        console.log(
+          "🔄 TaskContextProvider: Загружаем задачи для пользователя:",
+          user
+        );
+
         const data = await fetchTasks({ token });
 
         if (data) {
@@ -30,6 +36,10 @@ export const TaskProvider = ({ children }) => {
             id: task._id,
           }));
           setTasks(tasksWithId);
+          console.log(
+            "✅ TaskContextProvider: Задачи загружены:",
+            tasksWithId.length
+          );
         }
       } catch (err) {
         console.error("Ошибка загрузки задач:", err);
@@ -40,7 +50,7 @@ export const TaskProvider = ({ children }) => {
     };
 
     loadTasks();
-  }, [user?.id]); // Используем только ID пользователя, а не весь объект
+  }, [user]); // Зависим от всего объекта пользователя
 
   // Добавление новой задачи
   const addTask = async (taskData) => {

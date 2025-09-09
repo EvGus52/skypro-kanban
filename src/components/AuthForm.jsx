@@ -94,8 +94,11 @@ const AuthForm = ({ isSignUp }) => {
         : await signUp(formData);
 
       if (data) {
-        login(data);
+        // Сохраняем токен в localStorage
         localStorage.setItem("token", data.token);
+        // Обновляем данные пользователя в контексте
+        login(data);
+        // Переходим на главную страницу
         navigate("/");
       }
     } catch (err) {

@@ -12,11 +12,20 @@ const AuthProvider = ({ children }) => {
     // А тут мы проверяем ЛС, когда приложение запускается
     try {
       const storedUser = localStorage.getItem("user");
-      if (storedUser) {
+      const storedToken = localStorage.getItem("token");
+
+      if (storedUser && storedToken) {
+        console.log(
+          "🔄 AuthProvider: Восстанавливаем пользователя из localStorage"
+        );
         setUser(JSON.parse(storedUser));
+      } else {
+        console.log("🔄 AuthProvider: Пользователь не авторизован");
+        setUser(null);
       }
     } catch (error) {
       console.error("Ошибка при загрузке данных из localStorage:", error);
+      setUser(null);
     }
   }, []);
 
@@ -36,7 +45,10 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    console.log("🔄 AuthProvider: Выход из системы");
     updateUserInfo(null);
+    // Очищаем токен при выходе
+    localStorage.removeItem("token");
     return true;
   };
   // В сам провайдер нужно обязательно прокинуть те значения,
