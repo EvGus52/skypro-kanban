@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { TaskContext } from "./TaskContext";
 import { AuthContext } from "./AuthContext";
+import { useError } from "./ErrorContext";
 import { fetchTasks, postTask, editTask, deleteTask } from "../services/Api";
 
 export const TaskProvider = ({ children }) => {
@@ -8,6 +9,7 @@ export const TaskProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { user } = useContext(AuthContext);
+  const { showError } = useError();
 
   // Загружаем задачи при монтировании компонента
   useEffect(() => {
@@ -44,6 +46,7 @@ export const TaskProvider = ({ children }) => {
       } catch (err) {
         console.error("Ошибка загрузки задач:", err);
         setError(err.message);
+        showError("Не удалось загрузить задачи");
       } finally {
         setLoading(false);
       }
@@ -79,7 +82,7 @@ export const TaskProvider = ({ children }) => {
 
   // Редактирование задачи
   const updateTask = async (id, taskData) => {
-    if (!user) return;
+    if (!user) return false;
 
     try {
       setLoading(true);
@@ -93,10 +96,13 @@ export const TaskProvider = ({ children }) => {
           id: task._id,
         }));
         setTasks(tasksWithId);
+        return true; // Успешное редактирование
       }
+      return false;
     } catch (err) {
       console.error("Ошибка редактирования задачи:", err);
       setError(err.message);
+      throw err; // Перебрасываем ошибку для обработки в компоненте
     } finally {
       setLoading(false);
     }
@@ -104,7 +110,7 @@ export const TaskProvider = ({ children }) => {
 
   // Удаление задачи
   const removeTask = async (id) => {
-    if (!user) return;
+    if (!user) return false;
 
     try {
       setLoading(true);
@@ -118,10 +124,13 @@ export const TaskProvider = ({ children }) => {
           id: task._id,
         }));
         setTasks(tasksWithId);
+        return true; // Успешное удаление
       }
+      return false;
     } catch (err) {
       console.error("Ошибка удаления задачи:", err);
       setError(err.message);
+      throw err; // Перебрасываем ошибку для обработки в компоненте
     } finally {
       setLoading(false);
     }

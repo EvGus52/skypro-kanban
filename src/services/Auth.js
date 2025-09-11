@@ -1,43 +1,36 @@
 import axios from "axios";
+import { getErrorMessage } from "../utils/errorHandler";
 
 const API_URL = "https://wedev-api.sky.pro/api/user";
 
+// Простая настройка axios
+const authClient = axios.create({
+  timeout: 10000,
+});
+
 export async function signIn(userData) {
   try {
-    const data = await axios.post(API_URL + "/login", userData, {
-      headers: {
-        "Content-Type": "",
-      },
-    });
-    return data.data.user;
+    const response = await authClient.post(`${API_URL}/login`, userData);
+    return response.data.user;
   } catch (error) {
-    throw new Error(error.response?.data?.error || error.message);
+    throw new Error(getErrorMessage(error));
   }
 }
 
 export async function signUp({ name, login, password }) {
   try {
-    const data = await axios.post(
-      API_URL,
-      { login, name, password },
-      {
-        headers: {
-          "Content-Type": "",
-        },
-      }
-    );
-    return data.data.user;
+    const response = await authClient.post(API_URL, { login, name, password });
+    return response.data.user;
   } catch (error) {
-    console.log(error);
-    throw new Error(error.response?.data?.error || error.message);
+    throw new Error(getErrorMessage(error));
   }
 }
 
 export async function getUsers() {
   try {
-    const data = await axios.get(API_URL);
-    return data.data.users;
+    const response = await authClient.get(API_URL);
+    return response.data.users;
   } catch (error) {
-    throw new Error(error.response?.data?.error || error.message);
+    throw new Error(getErrorMessage(error));
   }
 }

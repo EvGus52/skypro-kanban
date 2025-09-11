@@ -117,6 +117,8 @@ const PopBrowse = () => {
       });
       setIsEditing(true);
       setEditError(null);
+      setDeleteError(null); // Очищаем ошибки удаления при начале редактирования
+      setValidationErrors({}); // Очищаем ошибки валидации
     }
   }, [cardData]);
 
@@ -131,6 +133,7 @@ const PopBrowse = () => {
       date: new Date().toISOString(),
     });
     setEditError(null);
+    setValidationErrors({}); // Очищаем ошибки валидации
   }, []);
 
   // Обработка изменения полей формы
@@ -219,19 +222,21 @@ const PopBrowse = () => {
       console.log("Отправляем данные для изменения задачи:", taskData);
 
       // Используем updateTask из контекста (автоматически обновит список)
-      await updateTask(id, taskData);
+      const success = await updateTask(id, taskData);
 
-      // Обновляем локальные данные
-      setCardData((prev) => ({
-        ...prev,
-        ...taskData,
-      }));
+      if (success) {
+        // Обновляем локальные данные
+        setCardData((prev) => ({
+          ...prev,
+          ...taskData,
+        }));
 
-      // Выходим из режима редактирования
-      setIsEditing(false);
+        // Выходим из режима редактирования
+        setIsEditing(false);
 
-      // Закрываем модальное окно и возвращаемся на главную
-      navigate("/");
+        // Закрываем модальное окно и возвращаемся на главную
+        navigate("/");
+      }
     } catch (err) {
       console.error("Ошибка при изменении задачи:", err);
       setEditError(err.message);
@@ -242,6 +247,8 @@ const PopBrowse = () => {
 
   // Обработка удаления задачи
   const handleDeleteTask = () => {
+    setDeleteError(null); // Очищаем предыдущие ошибки удаления
+    setEditError(null); // Очищаем ошибки редактирования при начале удаления
     setShowDeleteModal(true);
   };
 
@@ -266,11 +273,13 @@ const PopBrowse = () => {
       console.log("Удаляем задачу с ID:", id);
 
       // Используем removeTask из контекста (автоматически обновит список)
-      await removeTask(id);
+      const success = await removeTask(id);
 
-      // Закрываем модальное окно и возвращаемся на главную
-      setShowDeleteModal(false);
-      navigate("/");
+      if (success) {
+        // Закрываем модальное окно и возвращаемся на главную
+        setShowDeleteModal(false);
+        navigate("/");
+      }
     } catch (err) {
       console.error("Ошибка при удалении задачи:", err);
       setDeleteError(err.message);
