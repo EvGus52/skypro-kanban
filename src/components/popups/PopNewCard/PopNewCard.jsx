@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Colors } from "../../../Colors";
-import { postTask } from "../../../services/Api";
 import { useContext } from "react";
 import { TaskContext } from "../../../context/TaskContext";
 import Calendar from "../../Calendar/Calendar";
@@ -21,6 +20,7 @@ const PopNewCard = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [validationErrors, setValidationErrors] = useState({});
 
   const handleClose = useCallback(() => {
     navigate("/");
@@ -33,6 +33,14 @@ const PopNewCard = () => {
       ...prev,
       [name]: value,
     }));
+
+    // Очищаем ошибку валидации для этого поля при изменении
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        [name]: null,
+      }));
+    }
   };
 
   // Обработка выбора категории
@@ -43,9 +51,32 @@ const PopNewCard = () => {
     }));
   };
 
+  // Валидация формы
+  const validateForm = () => {
+    const errors = {};
+
+    // Проверяем название задачи
+    if (!formData.title || formData.title.trim() === "") {
+      errors.title = "Название задачи обязательно для заполнения";
+    }
+
+    // Проверяем описание задачи
+    if (!formData.description || formData.description.trim() === "") {
+      errors.description = "Описание задачи обязательно для заполнения";
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   // Обработка отправки формы
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Валидируем форму перед отправкой
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       setLoading(true);
@@ -59,16 +90,12 @@ const PopNewCard = () => {
 
       // Подготавливаем данные для отправки согласно API
       const taskData = {
-        title: formData.title || "Новая задача",
+        title: formData.title.trim(),
         topic: formData.topic || "Research",
         status: formData.status || "Без статуса",
         date: formData.date || new Date().toISOString(),
+        description: formData.description.trim(),
       };
-
-      // Добавляем описание только если оно не пустое
-      if (formData.description && formData.description.trim() !== "") {
-        taskData.description = formData.description;
-      }
 
       console.log("Отправляем данные задачи:", taskData);
 
@@ -127,7 +154,9 @@ const PopNewCard = () => {
                     Название задачи
                   </label>
                   <input
-                    className="form-new__input"
+                    className={`form-new__input ${
+                      validationErrors.title ? "error" : ""
+                    }`}
                     type="text"
                     name="title"
                     id="formTitle"
@@ -136,19 +165,45 @@ const PopNewCard = () => {
                     onChange={handleInputChange}
                     autoFocus
                   />
+                  {validationErrors.title && (
+                    <div
+                      className="validation-error"
+                      style={{
+                        color: "red",
+                        fontSize: "12px",
+                        marginTop: "4px",
+                      }}
+                    >
+                      {validationErrors.title}
+                    </div>
+                  )}
                 </div>
                 <div className="form-new__block">
                   <label htmlFor="textArea" className="subttl">
                     Описание задачи
                   </label>
                   <textarea
-                    className="form-new__area"
+                    className={`form-new__area ${
+                      validationErrors.description ? "error" : ""
+                    }`}
                     name="description"
                     id="textArea"
                     placeholder="Введите описание задачи..."
                     value={formData.description}
                     onChange={handleInputChange}
                   ></textarea>
+                  {validationErrors.description && (
+                    <div
+                      className="validation-error"
+                      style={{
+                        color: "red",
+                        fontSize: "12px",
+                        marginTop: "4px",
+                      }}
+                    >
+                      {validationErrors.description}
+                    </div>
+                  )}
                 </div>
               </form>
               <Calendar

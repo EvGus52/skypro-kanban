@@ -27,6 +27,7 @@ const PopBrowse = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
 
   // Загружаем задачу по ID
   useEffect(() => {
@@ -139,6 +140,14 @@ const PopBrowse = () => {
       ...prev,
       [name]: value,
     }));
+
+    // Очищаем ошибку валидации для этого поля при изменении
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        [name]: null,
+      }));
+    }
   };
 
   // Обработка выбора категории
@@ -157,8 +166,31 @@ const PopBrowse = () => {
     }));
   };
 
+  // Валидация формы редактирования
+  const validateEditForm = () => {
+    const errors = {};
+
+    // Проверяем название задачи
+    if (!editData.title || editData.title.trim() === "") {
+      errors.title = "Название задачи обязательно для заполнения";
+    }
+
+    // Проверяем описание задачи
+    if (!editData.description || editData.description.trim() === "") {
+      errors.description = "Описание задачи обязательно для заполнения";
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   // Обработка сохранения изменений
   const handleSaveEdit = async () => {
+    // Валидируем форму перед отправкой
+    if (!validateEditForm()) {
+      return;
+    }
+
     try {
       setEditLoading(true);
       setEditError(null);
@@ -177,10 +209,10 @@ const PopBrowse = () => {
 
       // Подготавливаем данные для отправки согласно API
       const taskData = {
-        title: editData.title || "Новая задача",
+        title: editData.title.trim(),
         topic: editData.topic || "Research",
         status: editData.status || "Без статуса",
-        description: editData.description || "Описание не указано",
+        description: editData.description.trim(),
         date: editData.date || new Date().toISOString(),
       };
 
@@ -324,21 +356,39 @@ const PopBrowse = () => {
           <div className="pop-browse__content">
             <div className="pop-browse__top-block">
               {isEditing ? (
-                <input
-                  className="pop-browse__ttl"
-                  type="text"
-                  name="title"
-                  value={editData.title}
-                  onChange={handleEditInputChange}
-                  style={{
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                    padding: "8px",
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    width: "100%",
-                  }}
-                />
+                <div>
+                  <input
+                    className={`pop-browse__ttl ${
+                      validationErrors.title ? "error" : ""
+                    }`}
+                    type="text"
+                    name="title"
+                    value={editData.title}
+                    onChange={handleEditInputChange}
+                    style={{
+                      border: validationErrors.title
+                        ? "1px solid red"
+                        : "1px solid #ccc",
+                      borderRadius: "4px",
+                      padding: "8px",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      width: "100%",
+                    }}
+                  />
+                  {validationErrors.title && (
+                    <div
+                      className="validation-error"
+                      style={{
+                        color: "red",
+                        fontSize: "12px",
+                        marginTop: "4px",
+                      }}
+                    >
+                      {validationErrors.title}
+                    </div>
+                  )}
+                </div>
               ) : (
                 <h3 className="pop-browse__ttl">
                   {cardData?.title || "Название задачи"}
@@ -529,7 +579,9 @@ const PopBrowse = () => {
                     Описание задачи
                   </label>
                   <textarea
-                    className="form-browse__area"
+                    className={`form-browse__area ${
+                      validationErrors.description ? "error" : ""
+                    }`}
                     name="description"
                     id="textArea01"
                     readOnly={!isEditing}
@@ -540,7 +592,24 @@ const PopBrowse = () => {
                         : cardData?.description || ""
                     }
                     onChange={isEditing ? handleEditInputChange : undefined}
+                    style={
+                      isEditing && validationErrors.description
+                        ? { border: "1px solid red" }
+                        : {}
+                    }
                   ></textarea>
+                  {isEditing && validationErrors.description && (
+                    <div
+                      className="validation-error"
+                      style={{
+                        color: "red",
+                        fontSize: "12px",
+                        marginTop: "4px",
+                      }}
+                    >
+                      {validationErrors.description}
+                    </div>
+                  )}
                 </div>
               </form>
               <Calendar
