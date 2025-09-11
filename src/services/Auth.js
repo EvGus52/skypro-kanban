@@ -10,7 +10,11 @@ const authClient = axios.create({
 
 export async function signIn(userData) {
   try {
-    const response = await authClient.post(`${API_URL}/login`, userData);
+    const response = await authClient.post(`${API_URL}/login`, userData, {
+      headers: {
+        "Content-Type": "", // Убираем автоматический Content-Type
+      },
+    });
     return response.data.user;
   } catch (error) {
     throw new Error(getErrorMessage(error));
@@ -19,7 +23,15 @@ export async function signIn(userData) {
 
 export async function signUp({ name, login, password }) {
   try {
-    const response = await authClient.post(API_URL, { login, name, password });
+    const response = await authClient.post(
+      API_URL,
+      { login, name, password },
+      {
+        headers: {
+          "Content-Type": "", // Убираем автоматический Content-Type
+        },
+      }
+    );
     return response.data.user;
   } catch (error) {
     throw new Error(getErrorMessage(error));

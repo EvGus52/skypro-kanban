@@ -100,10 +100,12 @@ const PopNewCard = () => {
       console.log("Отправляем данные задачи:", taskData);
 
       // Используем addTask из контекста (автоматически обновит список)
-      await addTask(taskData);
+      const success = await addTask(taskData);
 
-      // После успешного создания задачи переходим на главную
-      navigate("/");
+      if (success) {
+        // После успешного создания задачи переходим на главную
+        navigate("/");
+      }
     } catch (err) {
       console.error("Ошибка при создании задачи:", err);
       setError(err.message);

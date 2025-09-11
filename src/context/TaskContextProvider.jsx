@@ -57,7 +57,7 @@ export const TaskProvider = ({ children }) => {
 
   // Добавление новой задачи
   const addTask = async (taskData) => {
-    if (!user) return;
+    if (!user) return false;
 
     try {
       setLoading(true);
@@ -71,10 +71,13 @@ export const TaskProvider = ({ children }) => {
           id: task._id,
         }));
         setTasks(tasksWithId);
+        return true; // Успешное добавление
       }
+      return false;
     } catch (err) {
       console.error("Ошибка добавления задачи:", err);
       setError(err.message);
+      throw err; // Перебрасываем ошибку для обработки в компоненте
     } finally {
       setLoading(false);
     }
