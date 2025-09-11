@@ -2,13 +2,14 @@ import React, { useEffect, useCallback, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Colors } from "../../../Colors";
 import { fetchTaskById, editTask, deleteTask } from "../../../services/Api";
-import { useTaskContext } from "../../../hooks/useTaskContext";
+import { useContext } from "react";
+import { TaskContext } from "../../../context/TaskContext";
 import Calendar from "../../Calendar/Calendar";
 
 const PopBrowse = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { refreshTasks } = useTaskContext();
+  const { updateTask, removeTask } = useContext(TaskContext);
   const [cardData, setCardData] = useState(null);
 
   const [loading, setLoading] = useState(true);
@@ -185,10 +186,8 @@ const PopBrowse = () => {
 
       console.log("Отправляем данные для изменения задачи:", taskData);
 
-      await editTask({ token, id, task: taskData });
-
-      // Обновляем список задач на главной странице
-      refreshTasks();
+      // Используем updateTask из контекста (автоматически обновит список)
+      await updateTask(id, taskData);
 
       // Обновляем локальные данные
       setCardData((prev) => ({
@@ -234,10 +233,8 @@ const PopBrowse = () => {
 
       console.log("Удаляем задачу с ID:", id);
 
-      await deleteTask({ token, id });
-
-      // Обновляем список задач на главной странице
-      refreshTasks();
+      // Используем removeTask из контекста (автоматически обновит список)
+      await removeTask(id);
 
       // Закрываем модальное окно и возвращаемся на главную
       setShowDeleteModal(false);
@@ -377,22 +374,23 @@ const PopBrowse = () => {
                       }`}
                       style={{
                         backgroundColor:
-                          editData.status === status ? "#94A6BE" : "#f5f5f5",
-                        color: editData.status === status ? "white" : "#666",
+                          editData.status === status
+                            ? "#94A6BE"
+                            : "transparent",
+                        color: editData.status === status ? "white" : "#94a6be",
                         cursor: "pointer",
-                        border: "1px solid #ddd",
-                        borderRadius: "4px",
-                        padding: "8px 12px",
-                        margin: "4px",
-                        display: "inline-block",
+                        border:
+                          editData.status === status
+                            ? "0.7px solid #94A6BE"
+                            : "0.7px solid rgba(148, 166, 190, 0.4)",
                       }}
                       onClick={() => handleEditStatusSelect(status)}
                     >
                       <p
                         style={{
-                          color: editData.status === status ? "white" : "#666",
+                          color:
+                            editData.status === status ? "white" : "#94a6be",
                           margin: 0,
-                          fontSize: "14px",
                         }}
                       >
                         {status}

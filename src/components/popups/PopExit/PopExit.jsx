@@ -1,5 +1,6 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../context/AuthContext";
 import {
   Overlay,
   Container,
@@ -11,8 +12,9 @@ import {
   ExitNo,
 } from "./PopExit.styled";
 
-const PopExit = ({ setIsAuth }) => {
+const PopExit = () => {
   const navigate = useNavigate();
+  const { logout } = useContext(AuthContext);
 
   const handleClose = useCallback(() => {
     window.location.href = window.location.origin + "/";
@@ -20,7 +22,8 @@ const PopExit = ({ setIsAuth }) => {
 
   const handleExit = (e) => {
     e.preventDefault();
-    if (setIsAuth) setIsAuth(false);
+    logout();
+    localStorage.removeItem("token");
     navigate("/sign-in", { replace: true });
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import {
   HeaderContainer,
@@ -9,9 +9,11 @@ import {
   HeaderUser,
   HeaderPopUserSet,
 } from "./Header.styled";
+import { AuthContext } from "../../context/AuthContext";
 
 const Header = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const toggleUserMenu = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
@@ -39,7 +41,7 @@ const Header = () => {
             href="#user-set-target"
             onClick={toggleUserMenu}
           >
-            Ivan Ivanov
+            {user?.name || "Пользователь"}
           </HeaderUser>
           <HeaderPopUserSet
             className="pop-user-set"
@@ -47,8 +49,10 @@ const Header = () => {
             style={{ display: isUserMenuOpen ? "block" : "none" }}
           >
             {/* <a href="">x</a> */}
-            <p className="pop-user-set__name">Ivan Ivanov</p>
-            <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
+            <p className="pop-user-set__name">{user?.name || "Пользователь"}</p>
+            <p className="pop-user-set__mail">
+              {user?.login || "email@example.com"}
+            </p>
             <div className="pop-user-set__theme">
               <p>Темная тема</p>
               <input type="checkbox" className="checkbox" name="checkbox" />

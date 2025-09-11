@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Wrapper,
@@ -12,9 +12,11 @@ import {
 } from "./AuthForm.styled";
 import { signIn, signUp } from "../services/Auth.js";
 import BaseInput from "./BaseInput/BaseInput";
+import { AuthContext } from "../context/AuthContext";
 
-const AuthForm = ({ isSignUp = false, setIsAuth }) => {
+const AuthForm = ({ isSignUp }) => {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   // состояние полей
   const [formData, setFormData] = useState({
@@ -46,8 +48,12 @@ const AuthForm = ({ isSignUp = false, setIsAuth }) => {
     }
 
     if (!formData.login.trim()) {
-      newErrors.login = "Логин обязателен";
+      newErrors.login = "Эл. почта обязательна";
       setError("Заполните все поля");
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.login)) {
+      newErrors.login = "Введите корректный email";
+      setError("Введите корректный email");
       isValid = false;
     }
 
@@ -92,9 +98,11 @@ const AuthForm = ({ isSignUp = false, setIsAuth }) => {
         : await signUp(formData);
 
       if (data) {
-        setIsAuth(true);
-        localStorage.setItem("user", JSON.stringify(data));
+        // Сохраняем токен в localStorage
         localStorage.setItem("token", data.token);
+        // Обновляем данные пользователя в контексте
+        login(data);
+        // Переходим на главную страницу
         navigate("/");
       }
     } catch (err) {
@@ -150,10 +158,10 @@ const AuthForm = ({ isSignUp = false, setIsAuth }) => {
               )}
               <div>
                 <BaseInput
-                  type="text"
+                  type="email"
                   name="login"
                   id={isSignUp ? "loginReg" : "formlogin"}
-                  placeholder="Логин"
+                  placeholder="Эл. почта"
                   value={formData.login}
                   onChange={handleChange}
                   error={!!errors.login}

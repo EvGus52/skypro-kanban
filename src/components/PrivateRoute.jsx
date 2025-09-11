@@ -1,15 +1,16 @@
+import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
-const PrivateRoute = ({ isAuth }) => {
-  console.log("🛡️ PrivateRoute: isAuth =", isAuth);
+const PrivateRoute = () => {
+  const { user } = useContext(AuthContext);
 
-  if (isAuth) {
-    console.log("✅ Пользователь авторизован, показываем контент");
-    return <Outlet />;
-  } else {
-    console.log("❌ Пользователь не авторизован, перенаправляем на /sign-in");
-    return <Navigate to="/sign-in" replace />;
-  }
+  console.log(
+    "🛡️ PrivateRoute: user =",
+    user ? "авторизован" : "не авторизован"
+  );
+
+  return user ? <Outlet /> : <Navigate to="/sign-in" replace />;
 };
 
 export default PrivateRoute;

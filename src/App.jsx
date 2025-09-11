@@ -1,13 +1,17 @@
 import React from "react";
 import { GlobalStyles } from "./GlobalStyles";
 import AppRoutes from "./routes/AppRoutes";
+import AuthProvider from "./context/AuthProvider";
+import { TaskProvider } from "./context/TaskContextProvider";
 
 const App = () => {
   return (
-    <>
-      <GlobalStyles />
-      <AppRoutes />
-    </>
+    <AuthProvider>
+      <TaskProvider>
+        <GlobalStyles />
+        <AppRoutes />
+      </TaskProvider>
+    </AuthProvider>
   );
 };
 

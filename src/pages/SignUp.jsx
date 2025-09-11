@@ -1,8 +1,8 @@
 import React from "react";
 import AuthForm from "../components/AuthForm";
 
-const SignUp = ({ setIsAuth }) => {
-  return <AuthForm isSignUp setIsAuth={setIsAuth} />;
+const SignUp = () => {
+  return <AuthForm isSignUp />;
 };
 
 export default SignUp;
