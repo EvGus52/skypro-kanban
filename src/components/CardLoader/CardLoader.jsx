@@ -7,12 +7,15 @@ const CardLoader = () => {
       <CardSkeletonItem>
         <div className="skeleton-header">
           <div className="skeleton-theme"></div>
-          <div className="skeleton-menu"></div>
+          <div className="skeleton-menu">
+            <div className="skeleton-dot"></div>
+            <div className="skeleton-dot"></div>
+            <div className="skeleton-dot"></div>
+          </div>
         </div>
         <div className="skeleton-content">
-          <div className="skeleton-title"></div>
-          <div className="skeleton-description"></div>
-          <div className="skeleton-date"></div>
+          <div className="skeleton-stripe skeleton-stripe-1"></div>
+          <div className="skeleton-stripe skeleton-stripe-2"></div>
         </div>
       </CardSkeletonItem>
     </CardSkeleton>
