@@ -19,8 +19,8 @@ export const CardSkeleton = styled.div`
 export const CardSkeletonItem = styled.div`
   width: 220px;
   height: 130px;
-  background-color: #ffffff;
-  border-radius: 10px;
+  background-color: ${(props) => props.theme.colors.surface};
+  border-radius: ${(props) => props.theme.sizes.borderRadius};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -39,7 +39,7 @@ export const CardSkeletonItem = styled.div`
   .skeleton-theme {
     width: 82px;
     height: 20px;
-    background: linear-gradient(90deg, #c1cddc 25%, #e9eef7 50%, #c1cddc 75%);
+    background: ${(props) => props.theme.colors.loaderGradient};
     background-size: 200px 100%;
     animation: ${shimmer} 2s infinite;
     border-radius: 18px;
@@ -57,7 +57,7 @@ export const CardSkeletonItem = styled.div`
       width: 4px;
       height: 4px;
       border-radius: 50%;
-      background: linear-gradient(90deg, #c1cddc 25%, #e9eef7 50%, #c1cddc 75%);
+      background: ${(props) => props.theme.colors.loaderGradient};
       background-size: 200px 100%;
       animation: ${shimmer} 2s infinite;
 
@@ -83,7 +83,7 @@ export const CardSkeletonItem = styled.div`
   }
 
   .skeleton-stripe {
-    background: linear-gradient(90deg, #c1cddc 25%, #e9eef7 50%, #c1cddc 75%);
+    background: ${(props) => props.theme.colors.loaderGradient};
     background-size: 200px 100%;
     animation: ${shimmer} 2s infinite;
     border-radius: 4px;
@@ -105,8 +105,8 @@ export const CardSkeletonItem = styled.div`
   @media screen and (max-width: 1200px) {
     width: 220px;
     height: 130px;
-    background-color: #ffffff;
-    border-radius: 10px;
+    background-color: ${(props) => props.theme.colors.surface};
+    border-radius: ${(props) => props.theme.sizes.borderRadius};
     display: flex;
     flex-direction: column;
     align-items: flex-start;

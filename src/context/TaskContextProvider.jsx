@@ -8,12 +8,17 @@ export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { user } = useContext(AuthContext);
+  const { user, isInitialized } = useContext(AuthContext);
   const { showError } = useError();
 
   // Загружаем задачи при монтировании компонента
   useEffect(() => {
     const loadTasks = async () => {
+      // Ждем инициализации AuthProvider
+      if (!isInitialized) {
+        return;
+      }
+
       // Проверяем наличие пользователя и токена
       const token = localStorage.getItem("token");
       if (!user || !token) {
@@ -53,7 +58,7 @@ export const TaskProvider = ({ children }) => {
     };
 
     loadTasks();
-  }, [user]); // Зависим от всего объекта пользователя
+  }, [user, isInitialized]); // Зависим от пользователя и состояния инициализации
 
   // Добавление новой задачи
   const addTask = async (taskData) => {

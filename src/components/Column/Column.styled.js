@@ -11,9 +11,9 @@ export const ColumnTitle = styled.div`
   margin: 15px 0;
 
   p {
-    color: #94a6be;
-    font-size: 14px;
-    font-weight: 600;
+    color: ${(props) => props.theme.colors.textMuted};
+    font-size: ${(props) => props.theme.fonts.size.normal};
+    font-weight: ${(props) => props.theme.fonts.weight.semibold};
     line-height: 1;
     text-transform: uppercase;
   }

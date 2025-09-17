@@ -3,15 +3,18 @@ import { GlobalStyles } from "./GlobalStyles";
 import AppRoutes from "./routes/AppRoutes";
 import AuthProvider from "./context/AuthProvider";
 import { TaskProvider } from "./context/TaskContextProvider";
+import { ThemeProvider } from "./context/ThemeContext";
 
 const App = () => {
   return (
-    <AuthProvider>
-      <TaskProvider>
-        <GlobalStyles />
-        <AppRoutes />
-      </TaskProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <TaskProvider>
+          <GlobalStyles />
+          <AppRoutes />
+        </TaskProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

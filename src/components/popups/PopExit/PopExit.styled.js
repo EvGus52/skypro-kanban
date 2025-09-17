@@ -1,54 +1,30 @@
 import styled from "styled-components";
+import {
+  ModalOverlay,
+  ModalContainer,
+  ModalBlockSmall,
+  ModalTitle,
+  ModalMediaQueries,
+} from "../../shared/Modal.styled";
+import { PrimaryButton, SecondaryButton } from "../../shared/BaseButton.styled";
 
-export const Overlay = styled.div`
-  width: 100%;
-  height: 100%;
-  min-width: 320px;
-  min-height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 5;
-`;
+// Экспортируем общие компоненты
+export {
+  ModalOverlay as Overlay,
+  ModalContainer as Container,
+  ModalBlockSmall as Block,
+  ModalMediaQueries as MediaQueries,
+};
 
-export const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  padding: 0 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-`;
-
-export const Block = styled.div`
-  display: block;
-  margin: 0 auto;
-  background-color: #ffffff;
-  max-width: 370px;
-  width: 100%;
-  padding: 50px 60px;
-  border-radius: 10px;
-  border: 0.7px solid #d4dbe5;
-
-  @media only screen and (max-width: 375px) {
-    padding: 50px 20px;
-  }
-`;
-
-export const Title = styled.h2`
+// Переопределяем Title для выравнивания по центру
+export const Title = styled(ModalTitle)`
   text-align: center;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 30px;
-  letter-spacing: -0.4px;
-  margin-bottom: 20px;
 `;
 
+// Форма
 export const Form = styled.form``;
 
+// Группа кнопок
 export const FormGroup = styled.div`
   width: 100%;
   display: flex;
@@ -60,49 +36,23 @@ export const FormGroup = styled.div`
   }
 `;
 
-export const ExitYes = styled.button`
+// Кнопка "Да" (используем PrimaryButton)
+export const ExitYes = styled(PrimaryButton)`
   width: 153px;
-  height: 30px;
-  background-color: #565eef;
-  border-radius: 4px;
-  border: none;
-  outline: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  line-height: 21px;
-  font-weight: 500;
-  letter-spacing: -0.14px;
-  color: #ffffff;
   margin-right: 10px;
 
   @media only screen and (max-width: 375px) {
     width: 100%;
-    height: 40px;
     margin-right: 0;
     margin-bottom: 10px;
   }
 `;
 
-export const ExitNo = styled.button`
+// Кнопка "Нет" (используем SecondaryButton)
+export const ExitNo = styled(SecondaryButton)`
   width: 153px;
-  height: 30px;
-  background-color: transparent;
-  border-radius: 4px;
-  border: 0.7px solid #565eef;
-  outline: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  line-height: 21px;
-  font-weight: 500;
-  letter-spacing: -0.14px;
-  color: #565eef;
 
   @media only screen and (max-width: 375px) {
     width: 100%;
-    height: 40px;
   }
 `;

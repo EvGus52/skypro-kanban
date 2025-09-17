@@ -9,9 +9,11 @@ import EmptyState from "../components/EmptyState";
 import PopExit from "../components/popups/PopExit/PopExit";
 import { Wrapper } from "../Wrapper.styled";
 import { TaskContext } from "../context/TaskContext";
+import { AuthContext } from "../context/AuthContext";
 
 const MainPage = () => {
   const { tasks, loading, error } = useContext(TaskContext);
+  const { isInitialized } = useContext(AuthContext);
 
   const getCardsByStatus = (status) =>
     tasks.filter((card) => card.status === status);
@@ -57,8 +59,8 @@ const MainPage = () => {
         </div>
       )}
 
-      {/* Показываем сообщение "Новых задач нет" только если на всей странице нет карточек */}
-      {!loading && tasks.length === 0 && (
+      {/* Показываем сообщение "Новых задач нет" только если инициализация завершена, загрузка не идет и нет карточек */}
+      {isInitialized && !loading && tasks.length === 0 && (
         <div
           style={{
             display: "flex",
@@ -72,8 +74,8 @@ const MainPage = () => {
         </div>
       )}
 
-      {/* Показываем колонки только если есть карточки или идет загрузка */}
-      {(!loading && tasks.length > 0) || loading ? (
+      {/* Показываем колонки только если есть карточки или идет загрузка, или если еще не завершена инициализация */}
+      {(!loading && tasks.length > 0) || loading || !isInitialized ? (
         <Main>
           <Column title="Без статуса">
             {renderColumnContent("Без статуса")}

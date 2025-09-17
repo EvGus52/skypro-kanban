@@ -4,8 +4,8 @@ import {
   Wrapper,
   Container,
   Modal,
-  ModalBlock,
-  ModalTitle,
+  AuthModalBlock,
+  AuthModalTitle,
   ModalForm,
   PrimaryBtn,
   FormGroup,
@@ -116,10 +116,8 @@ const AuthForm = ({ isSignUp }) => {
     <Wrapper>
       <Container>
         <Modal>
-          <ModalBlock>
-            <ModalTitle>
-              <h2>{isSignUp ? "Регистрация" : "Вход"}</h2>
-            </ModalTitle>
+          <AuthModalBlock>
+            <AuthModalTitle>{isSignUp ? "Регистрация" : "Вход"}</AuthModalTitle>
             <ModalForm onSubmit={handleSubmit}>
               {error && (
                 <div
@@ -200,7 +198,7 @@ const AuthForm = ({ isSignUp }) => {
                   </div>
                 )}
               </div>
-              <PrimaryBtn className="_hover01" type="submit" disabled={loading}>
+              <PrimaryBtn type="submit" disabled={loading}>
                 {loading
                   ? "Загрузка..."
                   : isSignUp
@@ -220,7 +218,7 @@ const AuthForm = ({ isSignUp }) => {
                 )}
               </FormGroup>
             </ModalForm>
-          </ModalBlock>
+          </AuthModalBlock>
         </Modal>
       </Container>
     </Wrapper>

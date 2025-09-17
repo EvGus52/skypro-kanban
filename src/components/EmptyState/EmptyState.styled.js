@@ -10,7 +10,7 @@ export const EmptyStateContainer = styled.div`
 `;
 
 export const EmptyStateText = styled.p`
-  color: #94a6be;
+  color: ${(props) => props.theme.colors.textMuted};
   font-size: 24px;
   font-weight: 500;
   text-align: center;

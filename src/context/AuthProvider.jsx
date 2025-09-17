@@ -7,6 +7,7 @@ import { checkLs } from "../utils/checkLs";
 const AuthProvider = ({ children }) => {
   // checkLs проверяет лс на наличие ключа user
   const [user, setUser] = useState(checkLs()); // Здесь будет лежать инфа о юзере
+  const [isInitialized, setIsInitialized] = useState(false); // Состояние инициализации
 
   useEffect(() => {
     // А тут мы проверяем ЛС, когда приложение запускается
@@ -26,6 +27,8 @@ const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Ошибка при загрузке данных из localStorage:", error);
       setUser(null);
+    } finally {
+      setIsInitialized(true); // Помечаем, что инициализация завершена
     }
   }, []);
 
@@ -54,7 +57,9 @@ const AuthProvider = ({ children }) => {
   // В сам провайдер нужно обязательно прокинуть те значения,
   // которые мы хотим использовать в разных частях приложения
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUserInfo }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, updateUserInfo, isInitialized }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Colors } from "../../Colors";
+import { useTheme } from "../../hooks/useTheme";
 import {
   CardsItem,
   CardsCard,
@@ -14,6 +15,8 @@ import {
 } from "./Card.styled";
 
 const Card = ({ card }) => {
+  const { isDarkMode } = useTheme();
+
   // Определяем тему на основе topic
   const getTheme = (topic) => {
     switch (topic) {
@@ -39,7 +42,7 @@ const Card = ({ card }) => {
   };
 
   const theme = getTheme(card.topic);
-  const themeColors = Colors[theme];
+  const themeColors = isDarkMode ? Colors.dark[theme] : Colors.light[theme];
 
   return (
     <CardsItem>

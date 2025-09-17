@@ -1,75 +1,45 @@
-
 import styled from "styled-components";
+import {
+  BaseButton,
+  PrimaryButton,
+  SecondaryButton,
+  FormButton,
+  FullWidthButton,
+  ButtonGroup,
+} from "../shared/BaseButton.styled";
 
-export const ButtonBrowseClose = styled.button`
-  height: 30px;
-  margin-bottom: 10px;
-  padding: 0 14px;
+// Экспортируем базовые компоненты
+export {
+  BaseButton,
+  PrimaryButton,
+  SecondaryButton,
+  FormButton,
+  FullWidthButton,
+  ButtonGroup,
+};
 
-  @media screen and (max-width: 495px) {
-    width: 100%;
-    height: 40px;
-  }
+// Специфичные кнопки для browse
+export const ButtonBrowseClose = styled(PrimaryButton)`
+  // Наследует все стили от PrimaryButton (заливка #565EEF, белый текст)
 `;
 
-export const ButtonEditClose = styled.button`
-  height: 30px;
-  margin-bottom: 10px;
-  padding: 0 14px;
-
-  @media screen and (max-width: 495px) {
-    width: 100%;
-    height: 40px;
-  }
+// Специфичные кнопки для edit
+export const ButtonEditClose = styled(PrimaryButton)`
+  // Наследует все стили от PrimaryButton (заливка #565EEF, белый текст)
 `;
 
-export const ButtonEditEdit = styled.button`
-  height: 30px;
-  margin-bottom: 10px;
-  padding: 0 14px;
-
-  @media screen and (max-width: 495px) {
-    width: 100%;
-    height: 40px;
-  }
+export const ButtonEditEdit = styled(SecondaryButton)`
+  // Наследует все стили от SecondaryButton
 `;
 
-export const ButtonEditDelete = styled.button`
-  height: 30px;
-  margin-bottom: 10px;
-  padding: 0 14px;
-
-  @media screen and (max-width: 495px) {
-    width: 100%;
-    height: 40px;
-  }
+export const ButtonEditDelete = styled(SecondaryButton)`
+  // Наследует все стили от SecondaryButton
 `;
 
-export const ButtonBrowseEdit = styled.button`
-  height: 30px;
-  margin-bottom: 10px;
-  padding: 0 14px;
-
-  @media screen and (max-width: 495px) {
-    width: 100%;
-    height: 40px;
-  }
+export const ButtonBrowseEdit = styled(SecondaryButton)`
+  // Наследует все стили от SecondaryButton
 `;
 
-export const ButtonBrowseDelete = styled.button`
-  height: 30px;
-  margin-bottom: 10px;
-  padding: 0 14px;
-
-  @media screen and (max-width: 495px) {
-    width: 100%;
-    height: 40px;
-  }
+export const ButtonBrowseDelete = styled(SecondaryButton)`
+  // Наследует все стили от SecondaryButton
 `;
-
-export const ButtonGroup = styled.div`
-  @media screen and (max-width: 495px) {
-    width: 100%;
-  }
-`;
-

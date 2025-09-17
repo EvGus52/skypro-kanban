@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+// Основные стили календаря
 export const CalendarContainer = styled.div`
   width: 182px;
   margin-bottom: 20px;
@@ -15,22 +16,31 @@ export const CalendarTitle = styled.div`
   margin-bottom: 14px;
   padding: 0 7px;
 
+  p {
+    font-family: ${(props) => props.theme.fonts.family};
+    font-weight: ${(props) => props.theme.fonts.weight.semibold};
+    font-style: normal;
+    font-size: ${(props) => props.theme.fonts.size.normal};
+    line-height: 100%;
+    margin: 0;
+  }
+
   @media screen and (max-width: 660px) {
     padding: 0;
   }
 `;
 
 export const CalendarParagraph = styled.p`
-  color: #94a6be;
-  font-size: 10px;
+  color: ${(props) => props.theme.colors.textMuted};
+  font-size: ${(props) => props.theme.fonts.size.small};
   line-height: 1;
 
   @media screen and (max-width: 660px) {
-    font-size: 14px;
+    font-size: ${(props) => props.theme.fonts.size.normal};
   }
 
   span {
-    color: #000000;
+    color: ${(props) => props.theme.colors.text};
   }
 `;
 
@@ -39,10 +49,10 @@ export const CalendarBlock = styled.div`
 `;
 
 export const CalendarMonth = styled.div`
-  color: #94a6be;
-  font-size: 14px;
+  color: ${(props) => props.theme.colors.textMuted};
+  font-size: ${(props) => props.theme.fonts.size.normal};
   line-height: 25px;
-  font-weight: 600;
+  font-weight: ${(props) => props.theme.fonts.weight.semibold};
 `;
 
 export const CalendarContent = styled.div`
@@ -63,14 +73,18 @@ export const CalendarDaysNames = styled.div`
 `;
 
 export const CalendarDayName = styled.div`
-  color: #94a6be;
-  font-size: 10px;
-  font-weight: 500;
+  color: ${(props) => props.theme.colors.textMuted};
+  font-size: ${(props) => props.theme.fonts.size.small};
+  font-weight: ${(props) => props.theme.fonts.weight.medium};
   line-height: normal;
   letter-spacing: -0.2px;
 
   @media screen and (max-width: 660px) {
-    font-size: 14px;
+    font-size: ${(props) => props.theme.fonts.size.normal};
+  }
+
+  &.weekend {
+    color: ${(props) => props.theme.colors.textMuted};
   }
 `;
 
@@ -98,8 +112,8 @@ export const CalendarCell = styled.div`
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  color: #94a6be;
-  font-size: 10px;
+  color: ${(props) => props.theme.colors.textMuted};
+  font-size: ${(props) => props.theme.fonts.size.small};
   line-height: 1;
   letter-spacing: -0.2px;
   cursor: pointer;
@@ -107,7 +121,29 @@ export const CalendarCell = styled.div`
   @media screen and (max-width: 660px) {
     width: 42px;
     height: 42px;
-    font-size: 14px;
+    font-size: ${(props) => props.theme.fonts.size.normal};
+  }
+
+  &.other-month {
+    opacity: 0;
+  }
+
+  &.cell-day:hover {
+    color: ${(props) => props.theme.colors.textMuted};
+    background-color: ${(props) => props.theme.colors.calendarCellHover};
+  }
+
+  &.selected {
+    background-color: ${(props) => props.theme.colors.calendarActiveDay};
+    color: ${(props) => props.theme.colors.calendarActiveDayText};
+  }
+
+  &.current {
+    font-weight: 700;
+  }
+
+  &.weekend {
+    color: ${(props) => props.theme.colors.textMuted};
   }
 `;
 
@@ -147,15 +183,8 @@ export const NavAction = styled.div`
   justify-content: center;
 
   svg {
-    fill: #94a6be;
+    fill: ${(props) => props.theme.colors.textMuted};
   }
 `;
 
-
-
-
-
-
-
-
-
+// Модификаторы для календаря

@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useCallback, useContext, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthContext";
 import {
   Overlay,
@@ -14,11 +14,18 @@ import {
 
 const PopExit = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout } = useContext(AuthContext);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Показываем попап только если в URL есть якорь #popExit
+  useEffect(() => {
+    setIsVisible(location.hash === "#popExit");
+  }, [location.hash]);
 
   const handleClose = useCallback(() => {
-    window.location.href = window.location.origin + "/";
-  }, []);
+    navigate("/", { replace: true });
+  }, [navigate]);
 
   const handleExit = (e) => {
     e.preventDefault();
@@ -34,6 +41,8 @@ const PopExit = () => {
 
   // Обработка клавиши Escape и блокировка прокрутки
   useEffect(() => {
+    if (!isVisible) return;
+
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         handleClose();
@@ -49,29 +58,21 @@ const PopExit = () => {
       // Восстанавливаем прокрутку при закрытии модального окна
       document.body.style.overflow = "unset";
     };
-  }, [handleClose]);
+  }, [handleClose, isVisible]);
+
+  if (!isVisible) return null;
 
   return (
     <Overlay className="pop-exit" id="popExit" onClick={handleClose}>
-      <Container className="pop-exit__container">
-        <Block className="pop-exit__block" onClick={(e) => e.stopPropagation()}>
-          <Title className="pop-exit__ttl">Выйти из аккаунта?</Title>
-          <Form className="pop-exit__form" id="formExit" action="#">
-            <FormGroup className="pop-exit__form-group">
-              <ExitYes
-                className="_hover01"
-                id="exitYes"
-                type="button"
-                onClick={handleExit}
-              >
+      <Container>
+        <Block onClick={(e) => e.stopPropagation()}>
+          <Title>Выйти из аккаунта?</Title>
+          <Form id="formExit" action="#">
+            <FormGroup>
+              <ExitYes id="exitYes" type="button" onClick={handleExit}>
                 Да, выйти
               </ExitYes>
-              <ExitNo
-                className="_hover03"
-                id="exitNo"
-                type="button"
-                onClick={handleStay}
-              >
+              <ExitNo id="exitNo" type="button" onClick={handleStay}>
                 Нет, остаться
               </ExitNo>
             </FormGroup>
