@@ -144,6 +144,53 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  // Перемещение задачи в другой статус
+  const moveTask = async (taskId, newStatus) => {
+    if (!user) return false;
+
+    try {
+      // Оптимистичное обновление UI
+      const updatedTasks = tasks.map((task) =>
+        task.id === taskId ? { ...task, status: newStatus } : task
+      );
+      setTasks(updatedTasks);
+
+      // Отправляем изменения на сервер
+      const token = localStorage.getItem("token");
+      const taskToUpdate = tasks.find((task) => task.id === taskId);
+
+      if (!taskToUpdate) {
+        throw new Error("Задача не найдена");
+      }
+
+      const data = await editTask({
+        token,
+        id: taskId,
+        task: { ...taskToUpdate, status: newStatus },
+      });
+
+      if (data) {
+        const tasksWithId = data.map((task) => ({
+          ...task,
+          id: task._id,
+        }));
+        setTasks(tasksWithId);
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error("Ошибка перемещения задачи:", err);
+      // В случае ошибки возвращаем исходное состояние
+      const originalTasks = tasks.map((task) =>
+        task.id === taskId ? { ...task, status: task.status } : task
+      );
+      setTasks(originalTasks);
+      setError(err.message);
+      showError("Не удалось переместить задачу");
+      return false;
+    }
+  };
+
   return (
     <TaskContext.Provider
       value={{
@@ -154,6 +201,7 @@ export const TaskProvider = ({ children }) => {
         addTask,
         updateTask,
         removeTask,
+        moveTask,
       }}
     >
       {children}

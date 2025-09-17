@@ -5,7 +5,7 @@ export const lightTheme = {
     secondary: "#33399B",
 
     // Фоновые цвета
-    background: "#f1f1f1",
+    background: "#EAEEF6",
     surface: "#FFFFFF",
     cardBackground: "#FFFFFF",
     popupBackground: "#FFFFFF",
@@ -42,7 +42,7 @@ export const lightTheme = {
     disabled: "#EAEEF6",
 
     // Тени и оверлеи
-    overlay: "rgba(0, 0, 0, 0.8)",
+    overlay: "rgba(0, 0, 0, 0.4)",
     shadow: "0px 4px 67px -12px rgba(26, 56, 101, 0.21)",
     shadowLight: "0px 10px 39px 0px rgba(26, 56, 101, 0.21)",
 
@@ -52,7 +52,7 @@ export const lightTheme = {
 
     // Специальные цвета для календаря
     calendarBackground: "#FFFFFF",
-    calendarCellHover: "#f1f1f1",
+    calendarCellHover: "#EAEEF6",
     calendarActiveDay: "#94A6BE",
     calendarActiveDayText: "#FFFFFF",
 
