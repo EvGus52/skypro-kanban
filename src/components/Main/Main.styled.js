@@ -5,7 +5,7 @@ export const MainContainer = styled.main`
   background-color: ${(props) => props.theme.colors.background};
 
   @media screen and (max-width: 660px) {
-    margin-top: 70px; /* Отступ для фиксированного хедера */
+    margin-top: 70px;
   }
 `;
 

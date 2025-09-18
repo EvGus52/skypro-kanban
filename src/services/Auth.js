@@ -12,7 +12,7 @@ export async function signIn(userData) {
   try {
     const response = await authClient.post(`${API_URL}/login`, userData, {
       headers: {
-        "Content-Type": "", // Убираем автоматический Content-Type
+        "Content-Type": "",
       },
     });
     return response.data.user;
@@ -28,7 +28,7 @@ export async function signUp({ name, login, password }) {
       { login, name, password },
       {
         headers: {
-          "Content-Type": "", // Убираем автоматический Content-Type
+          "Content-Type": "",
         },
       }
     );

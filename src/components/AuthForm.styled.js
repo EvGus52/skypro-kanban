@@ -5,7 +5,6 @@ import {
   ModalBlock,
   ModalTitle,
   ModalForm as BaseModalForm,
-  ModalMediaQueries,
 } from "./shared/Modal.styled";
 import { ModalInput } from "./shared/BaseInput.styled";
 import { FullWidthButton } from "./shared/BaseButton.styled";
@@ -38,7 +37,6 @@ export {
   ModalBlock as ModalBlock,
   ModalTitle as ModalTitle,
   ModalInput as ModalInput,
-  ModalMediaQueries as MediaQueries,
 };
 
 // Переопределяем ModalForm для добавления gap между инпутами

@@ -4,18 +4,16 @@ import {
   ModalContainer,
   ModalBlockSmall,
   ModalTitle,
-  ModalMediaQueries,
 } from "../../shared/Modal.styled";
 import { PrimaryButton, SecondaryButton } from "../../shared/BaseButton.styled";
 
-// Переопределяем Overlay для модалки выхода - всегда поверх всего контента
 export const Overlay = styled(ModalOverlay)`
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 9999; /* Поверх всего, включая header */
+  z-index: 9999;
 
   @media screen and (max-width: 660px) {
     position: fixed;
@@ -67,8 +65,6 @@ export const Block = styled(ModalBlockSmall)`
       props.theme.colors.popupBackground}; /* Применяем тему */
   }
 `;
-
-export { ModalMediaQueries as MediaQueries };
 
 // Переопределяем Title для выравнивания по центру
 export const Title = styled(ModalTitle)`

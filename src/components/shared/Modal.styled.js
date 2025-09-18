@@ -36,7 +36,7 @@ export const ModalContainer = styled.div`
   background: ${(props) => props.theme.colors.overlay};
 
   @media screen and (max-width: 660px) {
-    padding: 70px 0 0 0; /* Отступ сверху для хедера */
+    padding: 70px 0 0 0;
     justify-content: flex-start;
     background: #ffffff;
     min-height: 100vh;
@@ -66,7 +66,7 @@ export const ModalBlock = styled.div`
     border: none;
     box-shadow: none;
     background-color: #ffffff;
-    min-height: calc(100vh - 70px); /* Высота экрана минус хедер */
+    min-height: calc(100vh - 70px);
   }
 `;
 
@@ -167,21 +167,4 @@ export const ModalValidationError = styled.div`
   color: #ff6b6b;
   font-size: 12px;
   margin-top: 4px;
-`;
-
-// Медиа-запросы для модальных окон (устаревшие - стили перенесены в основные компоненты)
-export const ModalMediaQueries = styled.div`
-  @media screen and (max-width: 660px) {
-    ${ModalFormWrapper} {
-      display: block;
-    }
-  }
-
-  @media screen and (max-width: 495px) {
-    ${ModalForm} {
-      max-width: 100%;
-      width: 100%;
-      display: block;
-    }
-  }
 `;

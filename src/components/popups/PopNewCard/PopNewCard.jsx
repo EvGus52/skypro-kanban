@@ -4,12 +4,7 @@ import { Colors } from "../../../Colors";
 import { useContext } from "react";
 import { useTheme } from "../../../hooks/useTheme";
 import { TaskContext } from "../../../context/TaskContext";
-import {
-  showSuccess,
-  showError,
-  showLoading,
-  updateToast,
-} from "../../../utils/toast";
+import { showError, showLoading, updateToast } from "../../../utils/toast";
 import Calendar from "../../Calendar/Calendar";
 import {
   Overlay,
@@ -50,10 +45,8 @@ const PopNewCard = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
 
-  // Управление классом modal-open для скрытия фиксированной кнопки
   useEffect(() => {
     document.body.classList.add("modal-open");
 
@@ -113,7 +106,6 @@ const PopNewCard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Валидируем форму перед отправкой
     if (!validateForm()) {
       return;
     }
@@ -130,7 +122,6 @@ const PopNewCard = () => {
         return;
       }
 
-      // Подготавливаем данные для отправки согласно API
       const taskData = {
         title: formData.title.trim(),
         topic: formData.topic || "Research",
@@ -138,8 +129,6 @@ const PopNewCard = () => {
         date: formData.date || new Date().toISOString(),
         description: formData.description.trim(),
       };
-
-      console.log("Отправляем данные задачи:", taskData);
 
       // Используем addTask из контекста (автоматически обновит список)
       const success = await addTask(taskData);
@@ -152,7 +141,6 @@ const PopNewCard = () => {
         updateToast(loadingToast, "error", "Не удалось создать задачу");
       }
     } catch (err) {
-      console.error("Ошибка при создании задачи:", err);
       if (loadingToast) {
         updateToast(
           loadingToast,
@@ -286,7 +274,6 @@ const PopNewCard = () => {
                 </CategoryTheme>
               </CategoriesThemes>
             </CategoriesSection>
-            {error && <ErrorMessage>{error}</ErrorMessage>}
             <CreateButton
               id="btnCreate"
               type="submit"

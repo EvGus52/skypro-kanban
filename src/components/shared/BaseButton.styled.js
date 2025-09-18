@@ -117,10 +117,3 @@ export const FullWidthButton = styled(BaseButton)`
     background: ${(props) => props.theme.colors.hoverPrimary};
   }
 `;
-
-// Группа кнопок
-export const ButtonGroup = styled.div`
-  @media screen and (max-width: 495px) {
-    width: 100%;
-  }
-`;

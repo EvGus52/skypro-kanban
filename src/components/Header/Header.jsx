@@ -71,7 +71,6 @@ const Header = () => {
               id="user-set-target"
               style={{ display: isUserMenuOpen ? "block" : "none" }}
             >
-              {/* <a href="">x</a> */}
               <p className="pop-user-set__name">
                 {user?.name || "Пользователь"}
               </p>

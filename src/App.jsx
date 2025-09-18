@@ -4,7 +4,7 @@ import { GlobalStyles } from "./GlobalStyles";
 import AppRoutes from "./routes/AppRoutes";
 import AuthProvider from "./context/AuthProvider";
 import { TaskProvider } from "./context/TaskContextProvider";
-import { ThemeProvider } from "./context/ThemeContext";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
 import ToastProvider from "./components/ToastProvider";
 
 const App = () => {

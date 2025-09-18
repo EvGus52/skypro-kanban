@@ -11,7 +11,6 @@ import {
   ModalLabel,
   ModalErrorMessage,
   ModalValidationError,
-  ModalMediaQueries,
 } from "../../shared/Modal.styled";
 import { FormTextarea } from "../../shared/BaseInput.styled";
 import {
@@ -21,7 +20,6 @@ import {
   ButtonEditClose,
 } from "../../Button/Button.styled";
 
-// Экспортируем общие компоненты
 export {
   ModalOverlay as Overlay,
   ModalTitle as Title,
@@ -33,19 +31,15 @@ export {
   ModalValidationError as ValidationError,
 };
 
-// Переопределяем Container для применения правильной темы в мобильной версии
 export const Container = styled(ModalContainer)`
   @media screen and (max-width: 660px) {
-    background: ${(props) =>
-      props.theme.colors.background}; /* Применяем цвет темы */
+    background: ${(props) => props.theme.colors.background};
   }
 `;
 
-// Переопределяем Block для применения правильной темы в мобильной версии
 export const Block = styled(ModalBlock)`
   @media screen and (max-width: 660px) {
-    background-color: ${(props) =>
-      props.theme.colors.popupBackground}; /* Применяем цвет темы */
+    background-color: ${(props) => props.theme.colors.popupBackground};
   }
 `;
 

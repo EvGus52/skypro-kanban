@@ -18,7 +18,6 @@ const PopExit = () => {
   const { logout } = useContext(AuthContext);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Показываем попап только если в URL есть якорь #popExit
   useEffect(() => {
     setIsVisible(location.hash === "#popExit");
   }, [location.hash]);

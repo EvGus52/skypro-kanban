@@ -63,7 +63,6 @@ export const HeaderBtnMainNew = styled(PrimaryButton)`
     margin-right: 0;
   }
 
-  /* Скрываем кнопку когда открыто модальное окно */
   @media screen and (max-width: 660px) {
     .modal-open & {
       display: none;

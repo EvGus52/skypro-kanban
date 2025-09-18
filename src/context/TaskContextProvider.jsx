@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import { TaskContext } from "./TaskContext";
 import { AuthContext } from "./AuthContext";
-import { useError } from "./ErrorContext";
 import { fetchTasks, postTask, editTask, deleteTask } from "../services/Api";
+import { showError } from "../utils/toast";
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { user, isInitialized } = useContext(AuthContext);
-  const { showError } = useError();
 
   // Загружаем задачи при монтировании компонента
   useEffect(() => {
@@ -29,10 +28,6 @@ export const TaskProvider = ({ children }) => {
       try {
         setLoading(true);
         setError("");
-        console.log(
-          "🔄 TaskContextProvider: Загружаем задачи для пользователя:",
-          user
-        );
 
         const data = await fetchTasks({ token });
 
@@ -43,10 +38,6 @@ export const TaskProvider = ({ children }) => {
             id: task._id,
           }));
           setTasks(tasksWithId);
-          console.log(
-            "✅ TaskContextProvider: Задачи загружены:",
-            tasksWithId.length
-          );
         }
       } catch (err) {
         console.error("Ошибка загрузки задач:", err);

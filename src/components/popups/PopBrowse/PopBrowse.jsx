@@ -1,16 +1,11 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Colors } from "../../../Colors";
-import { fetchTaskById, editTask, deleteTask } from "../../../services/Api";
+import { fetchTaskById } from "../../../services/Api";
 import { useContext } from "react";
 import { useTheme } from "../../../hooks/useTheme";
 import { TaskContext } from "../../../context/TaskContext";
-import {
-  showSuccess,
-  showError,
-  showLoading,
-  updateToast,
-} from "../../../utils/toast";
+import { showError, showLoading, updateToast } from "../../../utils/toast";
 import Calendar from "../../Calendar/Calendar";
 import {
   Overlay,
@@ -84,7 +79,6 @@ const PopBrowse = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
 
-  // Управление классом modal-open для скрытия фиксированной кнопки
   useEffect(() => {
     document.body.classList.add("modal-open");
 
@@ -93,7 +87,6 @@ const PopBrowse = () => {
     };
   }, []);
 
-  // Загружаем задачу по ID
   useEffect(() => {
     const loadTask = async () => {
       try {
@@ -104,7 +97,6 @@ const PopBrowse = () => {
           return;
         }
 
-        // Валидация ID - должен быть строкой из 24 hex символов
         if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
           setError("Неверный формат ID задачи");
           return;
@@ -118,7 +110,6 @@ const PopBrowse = () => {
         };
         setCardData(taskWithId);
       } catch (err) {
-        console.error("Ошибка при загрузке задачи:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -130,7 +121,6 @@ const PopBrowse = () => {
     }
   }, [id, navigate]);
 
-  // Функция для получения цвета темы
   const getThemeColor = (topic) => {
     const colorSet = isDarkMode ? Colors.dark : Colors.light;
     switch (topic) {
@@ -145,7 +135,6 @@ const PopBrowse = () => {
     }
   };
 
-  // Функция для получения цвета статуса
   const getStatusColor = (status) => {
     const colorSet = isDarkMode ? Colors.dark : Colors.light;
     switch (status) {
@@ -179,7 +168,6 @@ const PopBrowse = () => {
     navigate("/");
   }, [navigate]);
 
-  // Обработка начала редактирования
   const handleStartEdit = useCallback(() => {
     if (cardData) {
       setEditData({
@@ -196,7 +184,6 @@ const PopBrowse = () => {
     }
   }, [cardData]);
 
-  // Обработка отмены редактирования
   const handleCancelEdit = useCallback(() => {
     setIsEditing(false);
     setEditData({
@@ -210,7 +197,7 @@ const PopBrowse = () => {
     setValidationErrors({}); // Очищаем ошибки валидации
   }, []);
 
-  // Обработка изменения полей формы
+  
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
     setEditData((prev) => ({
@@ -227,17 +214,8 @@ const PopBrowse = () => {
     }
   };
 
-  // Обработка выбора категории
-  const handleEditTopicSelect = (topic) => {
-    setEditData((prev) => ({
-      ...prev,
-      topic: topic,
-    }));
-  };
-
   // Обработка выбора статуса
   const handleEditStatusSelect = (status) => {
-    console.log("Выбран статус:", status);
     setEditData((prev) => ({
       ...prev,
       status: status,
@@ -297,8 +275,6 @@ const PopBrowse = () => {
         date: editData.date || new Date().toISOString(),
       };
 
-      console.log("Отправляем данные для изменения задачи:", taskData);
-
       // Используем updateTask из контекста (автоматически обновит список)
       const success = await updateTask(id, taskData);
 
@@ -320,7 +296,6 @@ const PopBrowse = () => {
         updateToast(loadingToast, "error", "Не удалось сохранить изменения");
       }
     } catch (err) {
-      console.error("Ошибка при изменении задачи:", err);
       if (loadingToast) {
         updateToast(
           loadingToast,
@@ -363,8 +338,6 @@ const PopBrowse = () => {
         return;
       }
 
-      console.log("Удаляем задачу с ID:", id);
-
       // Используем removeTask из контекста (автоматически обновит список)
       const success = await removeTask(id);
 
@@ -377,7 +350,6 @@ const PopBrowse = () => {
         updateToast(loadingToast, "error", "Не удалось удалить задачу");
       }
     } catch (err) {
-      console.error("Ошибка при удалении задачи:", err);
       if (loadingToast) {
         updateToast(
           loadingToast,
@@ -509,138 +481,20 @@ const PopBrowse = () => {
               ) : (
                 <StatusThemes>
                   <StatusTheme
-                    className={
-                      cardData?.status === "Без статуса" ? "active" : "_hide"
-                    }
-                    style={
-                      cardData?.status === "Без статуса"
-                        ? {
-                            backgroundColor: isDarkMode
-                              ? "#94A6BE"
-                              : statusColor.background,
-                            color: isDarkMode ? "#151419" : statusColor.color,
-                          }
-                        : {}
-                    }
+                    className="active"
+                    style={{
+                      backgroundColor: isDarkMode
+                        ? "#94A6BE"
+                        : statusColor.background,
+                      color: isDarkMode ? "#151419" : statusColor.color,
+                    }}
                   >
                     <p
-                      style={
-                        cardData?.status === "Без статуса"
-                          ? {
-                              color: isDarkMode ? "#151419" : statusColor.color,
-                            }
-                          : {}
-                      }
+                      style={{
+                        color: isDarkMode ? "#151419" : statusColor.color,
+                      }}
                     >
-                      Без статуса
-                    </p>
-                  </StatusTheme>
-                  <StatusTheme
-                    className={
-                      cardData?.status === "Нужно сделать" ? "active" : "_hide"
-                    }
-                    style={
-                      cardData?.status === "Нужно сделать"
-                        ? {
-                            backgroundColor: isDarkMode
-                              ? "#94A6BE"
-                              : statusColor.background,
-                            color: isDarkMode ? "#151419" : statusColor.color,
-                          }
-                        : {}
-                    }
-                  >
-                    <p
-                      style={
-                        cardData?.status === "Нужно сделать"
-                          ? {
-                              color: isDarkMode ? "#151419" : statusColor.color,
-                            }
-                          : {}
-                      }
-                    >
-                      Нужно сделать
-                    </p>
-                  </StatusTheme>
-                  <StatusTheme
-                    className={
-                      cardData?.status === "В работе" ? "active" : "_hide"
-                    }
-                    style={
-                      cardData?.status === "В работе"
-                        ? {
-                            backgroundColor: isDarkMode
-                              ? "#94A6BE"
-                              : statusColor.background,
-                            color: isDarkMode ? "#151419" : statusColor.color,
-                          }
-                        : {}
-                    }
-                  >
-                    <p
-                      style={
-                        cardData?.status === "В работе"
-                          ? {
-                              color: isDarkMode ? "#151419" : statusColor.color,
-                            }
-                          : {}
-                      }
-                    >
-                      В работе
-                    </p>
-                  </StatusTheme>
-                  <StatusTheme
-                    className={
-                      cardData?.status === "Тестирование" ? "active" : "_hide"
-                    }
-                    style={
-                      cardData?.status === "Тестирование"
-                        ? {
-                            backgroundColor: isDarkMode
-                              ? "#94A6BE"
-                              : statusColor.background,
-                            color: isDarkMode ? "#151419" : statusColor.color,
-                          }
-                        : {}
-                    }
-                  >
-                    <p
-                      style={
-                        cardData?.status === "Тестирование"
-                          ? {
-                              color: isDarkMode ? "#151419" : statusColor.color,
-                            }
-                          : {}
-                      }
-                    >
-                      Тестирование
-                    </p>
-                  </StatusTheme>
-                  <StatusTheme
-                    className={
-                      cardData?.status === "Готово" ? "active" : "_hide"
-                    }
-                    style={
-                      cardData?.status === "Готово"
-                        ? {
-                            backgroundColor: isDarkMode
-                              ? "#94A6BE"
-                              : statusColor.background,
-                            color: isDarkMode ? "#151419" : statusColor.color,
-                          }
-                        : {}
-                    }
-                  >
-                    <p
-                      style={
-                        cardData?.status === "Готово"
-                          ? {
-                              color: isDarkMode ? "#151419" : statusColor.color,
-                            }
-                          : {}
-                      }
-                    >
-                      Готово
+                      {cardData?.status || "Без статуса"}
                     </p>
                   </StatusTheme>
                 </StatusThemes>

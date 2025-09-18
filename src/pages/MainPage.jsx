@@ -96,8 +96,8 @@ const MainPage = () => {
     // Перемещаем карточку в новый статус
     try {
       await moveTask(activeCard.id, targetStatus);
-    } catch (error) {
-      console.error("Ошибка при перемещении карточки:", error);
+    } catch {
+      // Ошибки обрабатываются в TaskContext
     }
   };
 

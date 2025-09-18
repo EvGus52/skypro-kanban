@@ -5,45 +5,26 @@ import {
   SecondaryButton,
   FormButton,
   FullWidthButton,
-  ButtonGroup,
 } from "../shared/BaseButton.styled";
 
-// Экспортируем базовые компоненты
 export {
   BaseButton,
   PrimaryButton,
   SecondaryButton,
   FormButton,
   FullWidthButton,
-  ButtonGroup,
 };
 
-// Специфичные кнопки для browse
-export const ButtonBrowseClose = styled(PrimaryButton)`
-  // Наследует все стили от PrimaryButton (заливка #565EEF, белый текст)
-`;
+export const ButtonBrowseClose = styled(PrimaryButton)``;
 
-// Специфичные кнопки для edit
-export const ButtonEditClose = styled(PrimaryButton)`
-  // Наследует все стили от PrimaryButton (заливка #565EEF, белый текст)
-`;
+export const ButtonEditClose = styled(PrimaryButton)``;
 
-export const ButtonEditEdit = styled(PrimaryButton)`
-  // Наследует все стили от PrimaryButton (заливка #565EEF, белый текст)
-`;
+export const ButtonEditEdit = styled(PrimaryButton)``;
 
-export const ButtonEditCancel = styled(SecondaryButton)`
-  // Наследует все стили от SecondaryButton (прозрачный фон, граница)
-`;
+export const ButtonEditCancel = styled(SecondaryButton)``;
 
-export const ButtonEditDelete = styled(SecondaryButton)`
-  // Наследует все стили от SecondaryButton
-`;
+export const ButtonEditDelete = styled(SecondaryButton)``;
 
-export const ButtonBrowseEdit = styled(SecondaryButton)`
-  // Наследует все стили от SecondaryButton
-`;
+export const ButtonBrowseEdit = styled(SecondaryButton)``;
 
-export const ButtonBrowseDelete = styled(SecondaryButton)`
-  // Наследует все стили от SecondaryButton
-`;
+export const ButtonBrowseDelete = styled(SecondaryButton)``;

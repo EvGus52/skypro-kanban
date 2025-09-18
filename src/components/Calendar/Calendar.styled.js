@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-// Основные стили календаря
 export const CalendarContainer = styled.div`
   width: 182px;
   margin-bottom: 20px;
@@ -139,13 +138,11 @@ export const CalendarCell = styled.div`
       background-color: ${(props) => props.theme.colors.calendarCellHover};
     }
 
-    /* Для мобильных устройств - активное состояние при нажатии */
     &:active:not(.selected) {
       color: ${(props) => props.theme.colors.textMuted};
       background-color: ${(props) => props.theme.colors.calendarCellHover};
     }
 
-    /* Дополнительно для touch-устройств */
     @media (hover: none) and (pointer: coarse) {
       &:active:not(.selected) {
         color: ${(props) => props.theme.colors.textMuted};
@@ -207,5 +204,3 @@ export const NavAction = styled.div`
     fill: ${(props) => props.theme.colors.textMuted};
   }
 `;
-
-// Модификаторы для календаря

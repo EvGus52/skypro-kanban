@@ -130,29 +130,6 @@ export const GlobalStyles = createGlobalStyle`
     opacity: 1;
   }
 
-  ._orange {
-    background-color: ${(props) => props.theme.colors.orange};
-    color: ${(props) => props.theme.colors.orangeText};
-  }
-
-  ._green {
-    background-color: ${(props) => props.theme.colors.green};
-    color: ${(props) => props.theme.colors.greenText};
-  }
-
-  ._purple {
-    background-color: ${(props) => props.theme.colors.purple};
-    color: ${(props) => props.theme.colors.purpleText};
-  }
-
-  ._gray {
-    background: ${(props) => props.theme.colors.gray};
-    color: ${(props) => props.theme.colors.grayText};
-  }
-
-  ._hide {
-    display: none;
-  }
 
   ._light {
     display: ${(props) => props.theme.colors.logoDisplay};

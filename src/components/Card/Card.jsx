@@ -17,7 +17,6 @@ import {
 const Card = ({ card }) => {
   const { isDarkMode } = useTheme();
 
-  // Определяем тему на основе topic
   const getTheme = (topic) => {
     switch (topic) {
       case "Web Design":
@@ -31,7 +30,6 @@ const Card = ({ card }) => {
     }
   };
 
-  // Функция для форматирования даты в формат "30.10.23"
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);

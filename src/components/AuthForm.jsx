@@ -1,11 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  showSuccess,
-  showError,
-  showLoading,
-  updateToast,
-} from "../utils/toast";
+import { showError, showLoading, updateToast } from "../utils/toast";
 import {
   Wrapper,
   Container,

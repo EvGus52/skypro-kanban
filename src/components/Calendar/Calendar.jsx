@@ -30,7 +30,6 @@ const Calendar = ({ selectedDate, onDateSelect, isEditing = true }) => {
     return `${day}.${month}.${year}`;
   };
 
-  // Названия месяцев на русском
   const monthNames = [
     "Январь",
     "Февраль",

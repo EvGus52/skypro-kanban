@@ -47,7 +47,6 @@ export const LinkBtn = styled.a`
   background-color: ${(props) => props.theme.colors.primary};
   text-decoration: none;
 
-  /* Более специфичный селектор для переопределения глобальных стилей a, a:visited */
   && {
     color: ${(props) => props.theme.colors.buttonText};
   }

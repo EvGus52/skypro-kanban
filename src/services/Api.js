@@ -51,7 +51,7 @@ export async function postTask({ token, task }) {
     const response = await apiClient.post(API_URL, task, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "", // Убираем автоматический Content-Type
+        "Content-Type": "",
       },
     });
     return response.data.tasks;
@@ -65,7 +65,7 @@ export async function editTask({ token, id, task }) {
     const response = await apiClient.put(`${API_URL}/${id}`, task, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "", // Убираем автоматический Content-Type
+        "Content-Type": "",
       },
     });
     return response.data.tasks;

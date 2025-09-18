@@ -16,12 +16,8 @@ const AuthProvider = ({ children }) => {
       const storedToken = localStorage.getItem("token");
 
       if (storedUser && storedToken) {
-        console.log(
-          "🔄 AuthProvider: Восстанавливаем пользователя из localStorage"
-        );
         setUser(JSON.parse(storedUser));
       } else {
-        console.log("🔄 AuthProvider: Пользователь не авторизован");
         setUser(null);
       }
     } catch (error) {
@@ -48,7 +44,6 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    console.log("🔄 AuthProvider: Выход из системы");
     updateUserInfo(null);
     // Очищаем токен при выходе
     localStorage.removeItem("token");
