@@ -22,8 +22,8 @@ export const CardsItem = styled.div`
 export const CardsCard = styled.div`
   width: 220px;
   height: 130px;
-  background-color: #ffffff;
-  border-radius: 10px;
+  background-color: ${(props) => props.theme.colors.cardBackground};
+  border-radius: ${(props) => props.theme.sizes.borderRadius};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -33,8 +33,8 @@ export const CardsCard = styled.div`
   @media screen and (max-width: 1200px) {
     width: 220px;
     height: 130px;
-    background-color: #ffffff;
-    border-radius: 10px;
+    background-color: ${(props) => props.theme.colors.cardBackground};
+    border-radius: ${(props) => props.theme.sizes.borderRadius};
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -59,9 +59,9 @@ export const CardTheme = styled.div`
   border-radius: 18px;
 
   p {
-    font-size: 10px;
-    font-weight: 600;
-    line-height: 10px;
+    font-size: ${(props) => props.theme.fonts.size.small};
+    font-weight: ${(props) => props.theme.fonts.weight.semibold};
+    line-height: ${(props) => props.theme.fonts.size.small};
   }
 `;
 
@@ -77,15 +77,15 @@ export const CardBtn = styled.div`
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background-color: #94a6be;
+    background-color: ${(props) => props.theme.colors.textMuted};
   }
 `;
 
 export const CardTitle = styled.h3`
-  font-size: 14px;
-  font-weight: 500;
+  font-size: ${(props) => props.theme.fonts.size.normal};
+  font-weight: ${(props) => props.theme.fonts.weight.medium};
   line-height: 18px;
-  color: #000000;
+  color: ${(props) => props.theme.colors.text};
   margin-bottom: 8px;
   overflow: hidden;
   white-space: nowrap;
@@ -97,7 +97,7 @@ export const CardTitle = styled.h3`
 export const CardDescription = styled.p`
   font-size: 12px;
   line-height: 16px;
-  color: #5e6c84;
+  color: ${(props) => props.theme.colors.textSecondary};
   margin-bottom: 8px;
   overflow: hidden;
   white-space: nowrap;
@@ -125,9 +125,9 @@ export const CardDate = styled.div`
 
   p {
     margin-left: 6px;
-    font-size: 10px;
+    font-size: ${(props) => props.theme.fonts.size.small};
     line-height: 13px;
-    color: #94a6be;
+    color: ${(props) => props.theme.colors.textMuted};
     letter-spacing: 0.2px;
   }
 `;

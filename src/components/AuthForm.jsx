@@ -1,11 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { showError, showLoading, updateToast } from "../utils/toast";
 import {
   Wrapper,
   Container,
   Modal,
-  ModalBlock,
-  ModalTitle,
+  AuthModalBlock,
+  AuthModalTitle,
   ModalForm,
   PrimaryBtn,
   FormGroup,
@@ -35,6 +36,22 @@ const AuthForm = ({ isSignUp }) => {
   // состояние текста ошибки, чтобы показать её пользователю
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Блокируем скролл в мобильной версии
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 495;
+    if (isMobile) {
+      document.body.style.overflow = "hidden";
+      document.body.style.height = "100vh";
+    }
+
+    return () => {
+      if (isMobile) {
+        document.body.style.overflow = "unset";
+        document.body.style.height = "auto";
+      }
+    };
+  }, []);
 
   // функция валидации
   const validateForm = () => {
@@ -87,10 +104,14 @@ const AuthForm = ({ isSignUp }) => {
       return;
     }
 
-    setLoading(true);
-    setError("");
-
+    let loadingToast = null;
     try {
+      setLoading(true);
+      setError("");
+      loadingToast = showLoading(
+        isSignUp ? "Регистрация..." : "Вход в аккаунт..."
+      );
+
       // чтобы не писать две разных функции, выберем нужный запрос через
       // тернарный оператор
       const data = !isSignUp
@@ -98,14 +119,26 @@ const AuthForm = ({ isSignUp }) => {
         : await signUp(formData);
 
       if (data) {
+        updateToast(
+          loadingToast,
+          "success",
+          isSignUp ? "Регистрация успешна!" : "Добро пожаловать!"
+        );
         // Сохраняем токен в localStorage
         localStorage.setItem("token", data.token);
         // Обновляем данные пользователя в контексте
         login(data);
         // Переходим на главную страницу
-        navigate("/");
+        setTimeout(() => navigate("/"), 1000); // Небольшая задержка для показа уведомления
+      } else {
+        updateToast(loadingToast, "error", "Не удалось выполнить операцию");
       }
     } catch (err) {
+      if (loadingToast) {
+        updateToast(loadingToast, "error", err.message);
+      } else {
+        showError(err.message);
+      }
       setError(err.message);
     } finally {
       setLoading(false);
@@ -116,10 +149,8 @@ const AuthForm = ({ isSignUp }) => {
     <Wrapper>
       <Container>
         <Modal>
-          <ModalBlock>
-            <ModalTitle>
-              <h2>{isSignUp ? "Регистрация" : "Вход"}</h2>
-            </ModalTitle>
+          <AuthModalBlock>
+            <AuthModalTitle>{isSignUp ? "Регистрация" : "Вход"}</AuthModalTitle>
             <ModalForm onSubmit={handleSubmit}>
               {error && (
                 <div
@@ -200,7 +231,7 @@ const AuthForm = ({ isSignUp }) => {
                   </div>
                 )}
               </div>
-              <PrimaryBtn className="_hover01" type="submit" disabled={loading}>
+              <PrimaryBtn type="submit" disabled={loading}>
                 {loading
                   ? "Загрузка..."
                   : isSignUp
@@ -220,7 +251,7 @@ const AuthForm = ({ isSignUp }) => {
                 )}
               </FormGroup>
             </ModalForm>
-          </ModalBlock>
+          </AuthModalBlock>
         </Modal>
       </Container>
     </Wrapper>

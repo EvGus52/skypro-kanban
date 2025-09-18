@@ -4,20 +4,20 @@ export const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background-color: #eaeef6;
+  background-color: ${(props) => props.theme.colors.background};
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
 export const Card = styled.div`
-  background-color: #ffffff;
+  background-color: ${(props) => props.theme.colors.surface};
   max-width: 420px;
   width: 100%;
   padding: 40px 32px;
-  border-radius: 10px;
-  border: 0.7px solid #d4dbe5;
-  box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
+  border-radius: ${(props) => props.theme.sizes.borderRadius};
+  border: 0.7px solid ${(props) => props.theme.colors.border};
+  box-shadow: ${(props) => props.theme.colors.shadow};
   text-align: center;
 `;
 
@@ -27,10 +27,11 @@ export const Title = styled.h2`
   line-height: 30px;
   letter-spacing: -0.6px;
   margin-bottom: 10px;
+  color: ${(props) => props.theme.colors.text};
 `;
 
 export const Text = styled.p`
-  color: #94a6be;
+  color: ${(props) => props.theme.colors.textMuted};
   font-size: 14px;
   line-height: 21px;
 `;
@@ -43,11 +44,19 @@ export const LinkBtn = styled.a`
   padding: 0 16px;
   margin-top: 20px;
   border-radius: 4px;
-  background-color: #565eef;
-  color: #ffffff;
+  background-color: ${(props) => props.theme.colors.primary};
   text-decoration: none;
 
+  && {
+    color: ${(props) => props.theme.colors.buttonText};
+  }
+
   &:hover {
-    background-color: #33399b;
+    background-color: ${(props) => props.theme.colors.hoverPrimary};
+  }
+
+  &:hover,
+  &:visited {
+    color: ${(props) => props.theme.colors.buttonText};
   }
 `;

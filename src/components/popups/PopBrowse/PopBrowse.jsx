@@ -1,15 +1,65 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Colors } from "../../../Colors";
-import { fetchTaskById, editTask, deleteTask } from "../../../services/Api";
+import { fetchTaskById } from "../../../services/Api";
 import { useContext } from "react";
+import { useTheme } from "../../../hooks/useTheme";
 import { TaskContext } from "../../../context/TaskContext";
+import { showError, showLoading, updateToast } from "../../../utils/toast";
 import Calendar from "../../Calendar/Calendar";
+import {
+  Overlay,
+  Container,
+  Block,
+  Content,
+  TopBlock,
+  Title,
+  TitleInput,
+  ThemeCategory,
+  Wrap,
+  Form,
+  FormBlock,
+  Label,
+  TextArea,
+  ButtonSection,
+  ButtonGroup,
+  ErrorMessage,
+  ValidationError,
+  DeleteModal,
+  DeleteModalContent,
+  DeleteModalTitle,
+  DeleteModalText,
+  DeleteModalButtons,
+  DeleteModalButton,
+  StatusSectionBrowse,
+} from "./PopBrowse.styled";
+import {
+  StatusContainer as StatusSection,
+  StatusParagraph as StatusLabel,
+  StatusThemes,
+  StatusTheme,
+} from "../../Status/Status.styled";
+import {
+  CategoriesContainer as CategoriesSection,
+  CategoriesParagraph as CategoriesLabel,
+  CategoriesThemes,
+  CategoriesTheme as CategoryTheme,
+} from "../../Categories/Categories.styled";
+import {
+  ButtonBrowseClose,
+  ButtonEditClose,
+  ButtonEditEdit,
+  ButtonEditCancel,
+  ButtonEditDelete,
+  ButtonBrowseEdit,
+  ButtonBrowseDelete,
+} from "../../Button/Button.styled";
 
 const PopBrowse = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { updateTask, removeTask } = useContext(TaskContext);
+  const { isDarkMode } = useTheme();
   const [cardData, setCardData] = useState(null);
 
   const [loading, setLoading] = useState(true);
@@ -27,19 +77,26 @@ const PopBrowse = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
 
-  // Загружаем задачу по ID
+  useEffect(() => {
+    document.body.classList.add("modal-open");
+
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, []);
+
   useEffect(() => {
     const loadTask = async () => {
       try {
         setLoading(true);
         const token = localStorage.getItem("token");
         if (!token) {
-          navigate("/login");
+          navigate("/sign-in");
           return;
         }
 
-        // Валидация ID - должен быть строкой из 24 hex символов
         if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
           setError("Неверный формат ID задачи");
           return;
@@ -53,7 +110,6 @@ const PopBrowse = () => {
         };
         setCardData(taskWithId);
       } catch (err) {
-        console.error("Ошибка при загрузке задачи:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -65,46 +121,53 @@ const PopBrowse = () => {
     }
   }, [id, navigate]);
 
-  // Функция для получения цвета темы
   const getThemeColor = (topic) => {
+    const colorSet = isDarkMode ? Colors.dark : Colors.light;
     switch (topic) {
       case "Web Design":
-        return Colors.orange;
+        return colorSet.orange;
       case "Research":
-        return Colors.green;
+        return colorSet.green;
       case "Copywriting":
-        return Colors.purple;
+        return colorSet.purple;
       default:
-        return Colors.gray;
+        return colorSet.gray;
     }
   };
 
-  // Функция для получения цвета статуса
   const getStatusColor = (status) => {
+    const colorSet = isDarkMode ? Colors.dark : Colors.light;
     switch (status) {
       case "Без статуса":
-        return Colors.gray;
+        return colorSet.gray;
       case "Нужно сделать":
-        return Colors.gray;
+        return colorSet.gray;
       case "В работе":
-        return Colors.gray;
+        return colorSet.gray;
       case "Тестирование":
-        return Colors.gray;
+        return colorSet.gray;
       case "Готово":
-        return Colors.gray;
+        return colorSet.gray;
       default:
-        return Colors.gray;
+        return colorSet.gray;
     }
   };
 
-  const themeColor = cardData ? getThemeColor(cardData.topic) : Colors.orange;
-  const statusColor = cardData ? getStatusColor(cardData.status) : Colors.gray;
+  const themeColor = cardData
+    ? getThemeColor(cardData.topic)
+    : isDarkMode
+    ? Colors.dark.orange
+    : Colors.light.orange;
+  const statusColor = cardData
+    ? getStatusColor(cardData.status)
+    : isDarkMode
+    ? Colors.dark.gray
+    : Colors.light.gray;
 
   const handleClose = useCallback(() => {
     navigate("/");
   }, [navigate]);
 
-  // Обработка начала редактирования
   const handleStartEdit = useCallback(() => {
     if (cardData) {
       setEditData({
@@ -116,10 +179,11 @@ const PopBrowse = () => {
       });
       setIsEditing(true);
       setEditError(null);
+      setDeleteError(null); // Очищаем ошибки удаления при начале редактирования
+      setValidationErrors({}); // Очищаем ошибки валидации
     }
   }, [cardData]);
 
-  // Обработка отмены редактирования
   const handleCancelEdit = useCallback(() => {
     setIsEditing(false);
     setEditData({
@@ -130,23 +194,24 @@ const PopBrowse = () => {
       date: new Date().toISOString(),
     });
     setEditError(null);
+    setValidationErrors({}); // Очищаем ошибки валидации
   }, []);
 
-  // Обработка изменения полей формы
+  
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
     setEditData((prev) => ({
       ...prev,
       [name]: value,
     }));
-  };
 
-  // Обработка выбора категории
-  const handleEditTopicSelect = (topic) => {
-    setEditData((prev) => ({
-      ...prev,
-      topic: topic,
-    }));
+    // Очищаем ошибку валидации для этого поля при изменении
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        [name]: null,
+      }));
+    }
   };
 
   // Обработка выбора статуса
@@ -157,52 +222,89 @@ const PopBrowse = () => {
     }));
   };
 
+  // Валидация формы редактирования
+  const validateEditForm = () => {
+    const errors = {};
+
+    // Проверяем название задачи
+    if (!editData.title || editData.title.trim() === "") {
+      errors.title = "Название задачи обязательно для заполнения";
+    }
+
+    // Проверяем описание задачи
+    if (!editData.description || editData.description.trim() === "") {
+      errors.description = "Описание задачи обязательно для заполнения";
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   // Обработка сохранения изменений
   const handleSaveEdit = async () => {
+    // Валидируем форму перед отправкой
+    if (!validateEditForm()) {
+      return;
+    }
+
+    let loadingToast = null;
     try {
       setEditLoading(true);
       setEditError(null);
+      loadingToast = showLoading("Сохранение изменений...");
 
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/login");
+        updateToast(loadingToast, "error", "Необходимо войти в аккаунт");
+        navigate("/sign-in");
         return;
       }
 
       // Валидация ID
       if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
-        setEditError("Неверный формат ID задачи");
+        updateToast(loadingToast, "error", "Неверный формат ID задачи");
         return;
       }
 
       // Подготавливаем данные для отправки согласно API
       const taskData = {
-        title: editData.title || "Новая задача",
+        title: editData.title.trim(),
         topic: editData.topic || "Research",
         status: editData.status || "Без статуса",
-        description: editData.description || "Описание не указано",
+        description: editData.description.trim(),
         date: editData.date || new Date().toISOString(),
       };
 
-      console.log("Отправляем данные для изменения задачи:", taskData);
-
       // Используем updateTask из контекста (автоматически обновит список)
-      await updateTask(id, taskData);
+      const success = await updateTask(id, taskData);
 
-      // Обновляем локальные данные
-      setCardData((prev) => ({
-        ...prev,
-        ...taskData,
-      }));
+      if (success) {
+        updateToast(loadingToast, "success", "Задача успешно обновлена!");
 
-      // Выходим из режима редактирования
-      setIsEditing(false);
+        // Обновляем локальные данные
+        setCardData((prev) => ({
+          ...prev,
+          ...taskData,
+        }));
 
-      // Закрываем модальное окно и возвращаемся на главную
-      navigate("/");
+        // Выходим из режима редактирования
+        setIsEditing(false);
+
+        // Закрываем модальное окно и возвращаемся на главную
+        setTimeout(() => navigate("/"), 1000); // Небольшая задержка для показа уведомления
+      } else {
+        updateToast(loadingToast, "error", "Не удалось сохранить изменения");
+      }
     } catch (err) {
-      console.error("Ошибка при изменении задачи:", err);
-      setEditError(err.message);
+      if (loadingToast) {
+        updateToast(
+          loadingToast,
+          "error",
+          `Ошибка при изменении задачи: ${err.message}`
+        );
+      } else {
+        showError(`Ошибка при изменении задачи: ${err.message}`);
+      }
     } finally {
       setEditLoading(false);
     }
@@ -210,38 +312,53 @@ const PopBrowse = () => {
 
   // Обработка удаления задачи
   const handleDeleteTask = () => {
+    setDeleteError(null); // Очищаем предыдущие ошибки удаления
+    setEditError(null); // Очищаем ошибки редактирования при начале удаления
     setShowDeleteModal(true);
   };
 
   // Подтверждение удаления
   const handleConfirmDelete = async () => {
+    let loadingToast = null;
     try {
       setDeleteLoading(true);
       setDeleteError(null);
+      loadingToast = showLoading("Удаление задачи...");
 
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/login");
+        updateToast(loadingToast, "error", "Необходимо войти в аккаунт");
+        navigate("/sign-in");
         return;
       }
 
       // Валидация ID
       if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
-        setDeleteError("Неверный формат ID задачи");
+        updateToast(loadingToast, "error", "Неверный формат ID задачи");
         return;
       }
 
-      console.log("Удаляем задачу с ID:", id);
-
       // Используем removeTask из контекста (автоматически обновит список)
-      await removeTask(id);
+      const success = await removeTask(id);
 
-      // Закрываем модальное окно и возвращаемся на главную
-      setShowDeleteModal(false);
-      navigate("/");
+      if (success) {
+        updateToast(loadingToast, "success", "Задача успешно удалена!");
+        // Закрываем модальное окно и возвращаемся на главную
+        setShowDeleteModal(false);
+        setTimeout(() => navigate("/"), 1000); // Небольшая задержка для показа уведомления
+      } else {
+        updateToast(loadingToast, "error", "Не удалось удалить задачу");
+      }
     } catch (err) {
-      console.error("Ошибка при удалении задачи:", err);
-      setDeleteError(err.message);
+      if (loadingToast) {
+        updateToast(
+          loadingToast,
+          "error",
+          `Ошибка при удалении задачи: ${err.message}`
+        );
+      } else {
+        showError(`Ошибка при удалении задачи: ${err.message}`);
+      }
     } finally {
       setDeleteLoading(false);
     }
@@ -279,87 +396,72 @@ const PopBrowse = () => {
   // Показываем загрузку
   if (loading) {
     return (
-      <div className="pop-browse" id="popBrowse">
-        <div className="pop-browse__container" onClick={handleClose}>
-          <div
-            className="pop-browse__block"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="pop-browse__content">
+      <Overlay id="popBrowse">
+        <Container onClick={handleClose}>
+          <Block onClick={(e) => e.stopPropagation()}>
+            <Content>
               <div style={{ textAlign: "center", padding: "50px" }}>
                 <p>Загрузка задачи...</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            </Content>
+          </Block>
+        </Container>
+      </Overlay>
     );
   }
 
   // Показываем ошибку
   if (error) {
     return (
-      <div className="pop-browse" id="popBrowse">
-        <div className="pop-browse__container" onClick={handleClose}>
-          <div
-            className="pop-browse__block"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="pop-browse__content">
+      <Overlay id="popBrowse">
+        <Container onClick={handleClose}>
+          <Block onClick={(e) => e.stopPropagation()}>
+            <Content>
               <div style={{ textAlign: "center", padding: "50px" }}>
                 <p style={{ color: "red" }}>Ошибка: {error}</p>
                 <button onClick={handleClose}>Закрыть</button>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            </Content>
+          </Block>
+        </Container>
+      </Overlay>
     );
   }
 
   return (
-    <div className="pop-browse" id="popBrowse">
-      <div className="pop-browse__container" onClick={handleClose}>
-        <div className="pop-browse__block" onClick={(e) => e.stopPropagation()}>
-          <div className="pop-browse__content">
-            <div className="pop-browse__top-block">
+    <Overlay id="popBrowse">
+      <Container onClick={handleClose}>
+        <Block onClick={(e) => e.stopPropagation()}>
+          <Content>
+            <TopBlock className={!isEditing ? "browse-mode" : ""}>
               {isEditing ? (
-                <input
-                  className="pop-browse__ttl"
-                  type="text"
-                  name="title"
-                  value={editData.title}
-                  onChange={handleEditInputChange}
-                  style={{
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                    padding: "8px",
-                    fontSize: "18px",
-                    fontWeight: "bold",
-                    width: "100%",
-                  }}
-                />
+                <div>
+                  <TitleInput
+                    className={validationErrors.title ? "error" : ""}
+                    type="text"
+                    name="title"
+                    value={editData.title}
+                    onChange={handleEditInputChange}
+                  />
+                  {validationErrors.title && (
+                    <ValidationError>{validationErrors.title}</ValidationError>
+                  )}
+                </div>
               ) : (
-                <h3 className="pop-browse__ttl">
-                  {cardData?.title || "Название задачи"}
-                </h3>
+                <Title>{cardData?.title || "Название задачи"}</Title>
               )}
-              <div
-                className="categories__theme theme-top _active-category"
-                style={{
-                  backgroundColor: themeColor.background,
-                  color: themeColor.color,
-                }}
+              <ThemeCategory
+                className="theme-top _active-category"
+                $backgroundColor={themeColor.background}
+                $color={themeColor.color}
               >
-                <p style={{ color: themeColor.color }}>
-                  {cardData?.topic || "Web Design"}
-                </p>
-              </div>
-            </div>
-            <div className="pop-browse__status status">
-              <p className="status__p subttl">Статус</p>
+                <p>{cardData?.topic || "Web Design"}</p>
+              </ThemeCategory>
+            </TopBlock>
+            <StatusSectionBrowse className={!isEditing ? "browse-mode" : ""}>
+              <StatusLabel>Статус</StatusLabel>
               {isEditing ? (
-                <div className="status__themes">
+                <StatusThemes>
                   {[
                     "Без статуса",
                     "Нужно сделать",
@@ -367,169 +469,43 @@ const PopBrowse = () => {
                     "Тестирование",
                     "Готово",
                   ].map((status) => (
-                    <div
+                    <StatusTheme
                       key={status}
-                      className={`status__theme ${
-                        editData.status === status ? "_active-status" : ""
-                      }`}
-                      style={{
-                        backgroundColor:
-                          editData.status === status
-                            ? "#94A6BE"
-                            : "transparent",
-                        color: editData.status === status ? "white" : "#94a6be",
-                        cursor: "pointer",
-                        border:
-                          editData.status === status
-                            ? "0.7px solid #94A6BE"
-                            : "0.7px solid rgba(148, 166, 190, 0.4)",
-                      }}
+                      className={editData.status === status ? "active" : ""}
                       onClick={() => handleEditStatusSelect(status)}
                     >
-                      <p
-                        style={{
-                          color:
-                            editData.status === status ? "white" : "#94a6be",
-                          margin: 0,
-                        }}
-                      >
-                        {status}
-                      </p>
-                    </div>
+                      <p>{status}</p>
+                    </StatusTheme>
                   ))}
-                </div>
+                </StatusThemes>
               ) : (
-                <div className="status__themes">
-                  <div
-                    className={`status__theme ${
-                      cardData?.status === "Без статуса" ? "" : "_hide"
-                    }`}
-                    style={
-                      cardData?.status === "Без статуса"
-                        ? {
-                            backgroundColor: statusColor.background,
-                            color: statusColor.color,
-                          }
-                        : {}
-                    }
+                <StatusThemes>
+                  <StatusTheme
+                    className="active"
+                    style={{
+                      backgroundColor: isDarkMode
+                        ? "#94A6BE"
+                        : statusColor.background,
+                      color: isDarkMode ? "#151419" : statusColor.color,
+                    }}
                   >
                     <p
-                      style={
-                        cardData?.status === "Без статуса"
-                          ? { color: statusColor.color }
-                          : {}
-                      }
+                      style={{
+                        color: isDarkMode ? "#151419" : statusColor.color,
+                      }}
                     >
-                      Без статуса
+                      {cardData?.status || "Без статуса"}
                     </p>
-                  </div>
-                  <div
-                    className={`status__theme ${
-                      cardData?.status === "Нужно сделать" ? "" : "_hide"
-                    }`}
-                    style={
-                      cardData?.status === "Нужно сделать"
-                        ? {
-                            backgroundColor: statusColor.background,
-                            color: statusColor.color,
-                          }
-                        : {}
-                    }
-                  >
-                    <p
-                      style={
-                        cardData?.status === "Нужно сделать"
-                          ? { color: statusColor.color }
-                          : {}
-                      }
-                    >
-                      Нужно сделать
-                    </p>
-                  </div>
-                  <div
-                    className={`status__theme ${
-                      cardData?.status === "В работе" ? "" : "_hide"
-                    }`}
-                    style={
-                      cardData?.status === "В работе"
-                        ? {
-                            backgroundColor: statusColor.background,
-                            color: statusColor.color,
-                          }
-                        : {}
-                    }
-                  >
-                    <p
-                      style={
-                        cardData?.status === "В работе"
-                          ? { color: statusColor.color }
-                          : {}
-                      }
-                    >
-                      В работе
-                    </p>
-                  </div>
-                  <div
-                    className={`status__theme ${
-                      cardData?.status === "Тестирование" ? "" : "_hide"
-                    }`}
-                    style={
-                      cardData?.status === "Тестирование"
-                        ? {
-                            backgroundColor: statusColor.background,
-                            color: statusColor.color,
-                          }
-                        : {}
-                    }
-                  >
-                    <p
-                      style={
-                        cardData?.status === "Тестирование"
-                          ? { color: statusColor.color }
-                          : {}
-                      }
-                    >
-                      Тестирование
-                    </p>
-                  </div>
-                  <div
-                    className={`status__theme ${
-                      cardData?.status === "Готово" ? "" : "_hide"
-                    }`}
-                    style={
-                      cardData?.status === "Готово"
-                        ? {
-                            backgroundColor: statusColor.background,
-                            color: statusColor.color,
-                          }
-                        : {}
-                    }
-                  >
-                    <p
-                      style={
-                        cardData?.status === "Готово"
-                          ? { color: statusColor.color }
-                          : {}
-                      }
-                    >
-                      Готово
-                    </p>
-                  </div>
-                </div>
+                  </StatusTheme>
+                </StatusThemes>
               )}
-            </div>
-            <div className="pop-browse__wrap">
-              <form
-                className="pop-browse__form form-browse"
-                id="formBrowseCard"
-                action="#"
-              >
-                <div className="form-browse__block">
-                  <label htmlFor="textArea01" className="subttl">
-                    Описание задачи
-                  </label>
-                  <textarea
-                    className="form-browse__area"
+            </StatusSectionBrowse>
+            <Wrap>
+              <Form id="formBrowseCard" action="#">
+                <FormBlock>
+                  <Label htmlFor="textArea01">Описание задачи</Label>
+                  <TextArea
+                    className={validationErrors.description ? "error" : ""}
                     name="description"
                     id="textArea01"
                     readOnly={!isEditing}
@@ -540,9 +516,19 @@ const PopBrowse = () => {
                         : cardData?.description || ""
                     }
                     onChange={isEditing ? handleEditInputChange : undefined}
-                  ></textarea>
-                </div>
-              </form>
+                    style={
+                      isEditing && validationErrors.description
+                        ? { border: "1px solid red" }
+                        : {}
+                    }
+                  />
+                  {isEditing && validationErrors.description && (
+                    <ValidationError>
+                      {validationErrors.description}
+                    </ValidationError>
+                  )}
+                </FormBlock>
+              </Form>
               <Calendar
                 selectedDate={isEditing ? editData.date : cardData?.date}
                 onDateSelect={(date) => {
@@ -555,211 +541,69 @@ const PopBrowse = () => {
                 }}
                 isEditing={isEditing}
               />
-            </div>
-            <div className="theme-down__categories theme-down">
-              <p className="categories__p subttl">Категория</p>
+            </Wrap>
+            <CategoriesSection className="theme-down">
+              <CategoriesLabel>Категория</CategoriesLabel>
               {isEditing ? (
-                <div className="categories__themes">
-                  <div
-                    className={`categories__theme ${
-                      editData.topic === "Web Design" ? "_active-category" : ""
-                    }`}
-                    style={{
-                      backgroundColor:
-                        editData.topic === "Web Design"
-                          ? "#94A6BE"
-                          : Colors.orange.background,
-                      color:
-                        editData.topic === "Web Design"
-                          ? "white"
-                          : Colors.orange.color,
-                      cursor: "pointer",
-                      border: "1px solid #ddd",
-                      borderRadius: "4px",
-                      padding: "8px 12px",
-                      margin: "4px",
-                      display: "inline-block",
-                    }}
-                    onClick={() => handleEditTopicSelect("Web Design")}
-                  >
-                    <p
-                      style={{
-                        color:
-                          editData.topic === "Web Design"
-                            ? "white"
-                            : Colors.orange.color,
-                        margin: 0,
-                        fontSize: "14px",
-                      }}
-                    >
-                      Web Design
-                    </p>
-                  </div>
-                  <div
-                    className={`categories__theme ${
-                      editData.topic === "Research" ? "_active-category" : ""
-                    }`}
-                    style={{
-                      backgroundColor:
-                        editData.topic === "Research"
-                          ? "#94A6BE"
-                          : Colors.green.background,
-                      color:
-                        editData.topic === "Research"
-                          ? "white"
-                          : Colors.green.color,
-                      cursor: "pointer",
-                      border: "1px solid #ddd",
-                      borderRadius: "4px",
-                      padding: "8px 12px",
-                      margin: "4px",
-                      display: "inline-block",
-                    }}
-                    onClick={() => handleEditTopicSelect("Research")}
-                  >
-                    <p
-                      style={{
-                        color:
-                          editData.topic === "Research"
-                            ? "white"
-                            : Colors.green.color,
-                        margin: 0,
-                        fontSize: "14px",
-                      }}
-                    >
-                      Research
-                    </p>
-                  </div>
-                  <div
-                    className={`categories__theme ${
-                      editData.topic === "Copywriting" ? "_active-category" : ""
-                    }`}
-                    style={{
-                      backgroundColor:
-                        editData.topic === "Copywriting"
-                          ? "#94A6BE"
-                          : Colors.purple.background,
-                      color:
-                        editData.topic === "Copywriting"
-                          ? "white"
-                          : Colors.purple.color,
-                      cursor: "pointer",
-                      border: "1px solid #ddd",
-                      borderRadius: "4px",
-                      padding: "8px 12px",
-                      margin: "4px",
-                      display: "inline-block",
-                    }}
-                    onClick={() => handleEditTopicSelect("Copywriting")}
-                  >
-                    <p
-                      style={{
-                        color:
-                          editData.topic === "Copywriting"
-                            ? "white"
-                            : Colors.purple.color,
-                        margin: 0,
-                        fontSize: "14px",
-                      }}
-                    >
-                      Copywriting
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div
-                  className="categories__theme _active-category"
+                <CategoryTheme
+                  className="_active-category"
                   style={{
                     backgroundColor: themeColor.background,
                     color: themeColor.color,
+                    opacity: 1,
                   }}
                 >
-                  <p style={{ color: themeColor.color }}>
-                    {cardData?.topic || "Web Design"}
-                  </p>
-                </div>
-              )}
-            </div>
-            <div
-              className={`pop-browse__btn-browse ${isEditing ? "_hide" : ""}`}
-            >
-              {deleteError && (
-                <div
+                  <p>{editData?.topic || "Web Design"}</p>
+                </CategoryTheme>
+              ) : (
+                <CategoryTheme
+                  className="_active-category"
                   style={{
-                    color: "red",
-                    marginBottom: "10px",
-                    textAlign: "center",
+                    backgroundColor: themeColor.background,
+                    color: themeColor.color,
+                    opacity: 1,
                   }}
                 >
-                  {deleteError}
-                </div>
+                  <p>{cardData?.topic || "Web Design"}</p>
+                </CategoryTheme>
               )}
-              <div className="btn-group">
-                <button
-                  className="btn-browse__edit _btn-bor _hover03"
-                  onClick={handleStartEdit}
-                >
+            </CategoriesSection>
+            <ButtonSection className={isEditing ? "hidden" : ""}>
+              {deleteError && <ErrorMessage>{deleteError}</ErrorMessage>}
+              <ButtonGroup>
+                <ButtonBrowseEdit onClick={handleStartEdit}>
                   <a href="#" onClick={(e) => e.preventDefault()}>
                     Редактировать задачу
                   </a>
-                </button>
-                <button
-                  className="btn-browse__delete _btn-bor _hover03"
+                </ButtonBrowseEdit>
+                <ButtonBrowseDelete
                   onClick={handleDeleteTask}
                   disabled={deleteLoading}
                 >
                   <a href="#" onClick={(e) => e.preventDefault()}>
                     {deleteLoading ? "Удаление..." : "Удалить задачу"}
                   </a>
-                </button>
-              </div>
-              <button className="btn-browse__close _btn-bg _hover01">
+                </ButtonBrowseDelete>
+              </ButtonGroup>
+              <ButtonBrowseClose>
                 <Link to="/">Закрыть</Link>
-              </button>
-            </div>
-            <div className={`pop-browse__btn-edit ${isEditing ? "" : "_hide"}`}>
-              {editError && (
-                <div
-                  style={{
-                    color: "red",
-                    marginBottom: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  {editError}
-                </div>
-              )}
-              {deleteError && (
-                <div
-                  style={{
-                    color: "red",
-                    marginBottom: "10px",
-                    textAlign: "center",
-                  }}
-                >
-                  {deleteError}
-                </div>
-              )}
-              <div className="btn-group">
-                <button
-                  className="btn-edit__edit _btn-bg _hover01"
-                  onClick={handleSaveEdit}
-                  disabled={editLoading}
-                >
+              </ButtonBrowseClose>
+            </ButtonSection>
+            <ButtonSection className={isEditing ? "" : "hidden"}>
+              {editError && <ErrorMessage>{editError}</ErrorMessage>}
+              {deleteError && <ErrorMessage>{deleteError}</ErrorMessage>}
+              <ButtonGroup className="edit-buttons">
+                <ButtonEditEdit onClick={handleSaveEdit} disabled={editLoading}>
                   <a href="#" onClick={(e) => e.preventDefault()}>
                     {editLoading ? "Сохранение..." : "Сохранить"}
                   </a>
-                </button>
-                <button
-                  className="btn-edit__edit _btn-bor _hover03"
-                  onClick={handleCancelEdit}
-                >
+                </ButtonEditEdit>
+                <ButtonEditCancel onClick={handleCancelEdit}>
                   <a href="#" onClick={(e) => e.preventDefault()}>
                     Отменить
                   </a>
-                </button>
-                <button
-                  className="btn-edit__delete _btn-bor _hover03"
+                </ButtonEditCancel>
+                <ButtonEditDelete
                   id="btnDelete"
                   onClick={handleDeleteTask}
                   disabled={deleteLoading}
@@ -767,124 +611,46 @@ const PopBrowse = () => {
                   <a href="#" onClick={(e) => e.preventDefault()}>
                     {deleteLoading ? "Удаление..." : "Удалить задачу"}
                   </a>
-                </button>
-              </div>
-              <button className="btn-edit__close _btn-bg _hover01">
-                <Link to="/">Закрыть</Link>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+                </ButtonEditDelete>
+                <ButtonEditClose>
+                  <Link to="/">Закрыть</Link>
+                </ButtonEditClose>
+              </ButtonGroup>
+            </ButtonSection>
+          </Content>
+        </Block>
+      </Container>
 
       {/* Модалка подтверждения удаления */}
       {showDeleteModal && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 9999,
-            background: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px",
-          }}
-          onClick={handleCancelDelete}
-        >
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
-              maxWidth: "400px",
-              width: "100%",
-              padding: "24px",
-              textAlign: "center",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3
-              style={{
-                margin: "0 0 16px 0",
-                fontSize: "20px",
-                fontWeight: "600",
-                color: "#333",
-              }}
-            >
-              Удалить задачу
-            </h3>
-            <p
-              style={{
-                margin: "0 0 24px 0",
-                fontSize: "16px",
-                color: "#666",
-                lineHeight: "1.5",
-              }}
-            >
+        <DeleteModal onClick={handleCancelDelete}>
+          <DeleteModalContent onClick={(e) => e.stopPropagation()}>
+            <DeleteModalTitle>Удалить задачу</DeleteModalTitle>
+            <DeleteModalText>
               Вы уверены, что хотите удалить задачу "
               {cardData?.title || "Без названия"}"?
-            </p>
-            {deleteError && (
-              <div
-                style={{
-                  color: "red",
-                  marginBottom: "16px",
-                  fontSize: "14px",
-                }}
-              >
-                {deleteError}
-              </div>
-            )}
-            <div
-              style={{
-                display: "flex",
-                gap: "12px",
-                justifyContent: "center",
-              }}
-            >
-              <button
-                style={{
-                  padding: "10px 20px",
-                  border: "1px solid #ddd",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  cursor: "pointer",
-                  background: "#f5f5f5",
-                  color: "#666",
-                  minWidth: "100px",
-                }}
+            </DeleteModalText>
+            {deleteError && <ErrorMessage>{deleteError}</ErrorMessage>}
+            <DeleteModalButtons>
+              <DeleteModalButton
+                className="cancel"
                 onClick={handleCancelDelete}
                 disabled={deleteLoading}
               >
                 Отмена
-              </button>
-              <button
-                style={{
-                  padding: "10px 20px",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  cursor: deleteLoading ? "not-allowed" : "pointer",
-                  background: deleteLoading ? "#ccc" : "#dc3545",
-                  color: "white",
-                  minWidth: "100px",
-                }}
+              </DeleteModalButton>
+              <DeleteModalButton
+                className="confirm"
                 onClick={handleConfirmDelete}
                 disabled={deleteLoading}
               >
                 {deleteLoading ? "Удаление..." : "Удалить"}
-              </button>
-            </div>
-          </div>
-        </div>
+              </DeleteModalButton>
+            </DeleteModalButtons>
+          </DeleteModalContent>
+        </DeleteModal>
       )}
-    </div>
+    </Overlay>
   );
 };
 

@@ -5,18 +5,17 @@ export const Wrapper = styled.div`
   width: 100vw;
   min-height: 100vh;
   overflow: hidden;
-  background-color: #f1f1f1;
+  background-color: ${(props) => props.theme.colors.background};
 `;
 
 export const Container = styled.div`
-  max-width: 1260px;
+  max-width: ${(props) => props.theme.sizes.maxWidth};
   width: 100%;
   margin: 0 auto;
-  padding: 0 30px;
+  padding: 0 ${(props) => props.theme.sizes.padding};
 
   @media screen and (max-width: 495px) {
     width: 100%;
-    padding: 0 16px;
+    padding: 0 ${(props) => props.theme.sizes.paddingSmall};
   }
 `;
-

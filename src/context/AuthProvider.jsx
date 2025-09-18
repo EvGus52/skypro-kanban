@@ -7,6 +7,7 @@ import { checkLs } from "../utils/checkLs";
 const AuthProvider = ({ children }) => {
   // checkLs проверяет лс на наличие ключа user
   const [user, setUser] = useState(checkLs()); // Здесь будет лежать инфа о юзере
+  const [isInitialized, setIsInitialized] = useState(false); // Состояние инициализации
 
   useEffect(() => {
     // А тут мы проверяем ЛС, когда приложение запускается
@@ -15,17 +16,15 @@ const AuthProvider = ({ children }) => {
       const storedToken = localStorage.getItem("token");
 
       if (storedUser && storedToken) {
-        console.log(
-          "🔄 AuthProvider: Восстанавливаем пользователя из localStorage"
-        );
         setUser(JSON.parse(storedUser));
       } else {
-        console.log("🔄 AuthProvider: Пользователь не авторизован");
         setUser(null);
       }
     } catch (error) {
       console.error("Ошибка при загрузке данных из localStorage:", error);
       setUser(null);
+    } finally {
+      setIsInitialized(true); // Помечаем, что инициализация завершена
     }
   }, []);
 
@@ -45,7 +44,6 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    console.log("🔄 AuthProvider: Выход из системы");
     updateUserInfo(null);
     // Очищаем токен при выходе
     localStorage.removeItem("token");
@@ -54,7 +52,9 @@ const AuthProvider = ({ children }) => {
   // В сам провайдер нужно обязательно прокинуть те значения,
   // которые мы хотим использовать в разных частях приложения
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUserInfo }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, updateUserInfo, isInitialized }}
+    >
       {children}
     </AuthContext.Provider>
   );

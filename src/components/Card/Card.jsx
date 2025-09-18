@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Colors } from "../../Colors";
+import { useTheme } from "../../hooks/useTheme";
 import {
   CardsItem,
   CardsCard,
@@ -14,7 +15,8 @@ import {
 } from "./Card.styled";
 
 const Card = ({ card }) => {
-  // Определяем тему на основе topic
+  const { isDarkMode } = useTheme();
+
   const getTheme = (topic) => {
     switch (topic) {
       case "Web Design":
@@ -28,7 +30,6 @@ const Card = ({ card }) => {
     }
   };
 
-  // Функция для форматирования даты в формат "30.10.23"
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -39,7 +40,7 @@ const Card = ({ card }) => {
   };
 
   const theme = getTheme(card.topic);
-  const themeColors = Colors[theme];
+  const themeColors = isDarkMode ? Colors.dark[theme] : Colors.light[theme];
 
   return (
     <CardsItem>

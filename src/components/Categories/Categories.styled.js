@@ -12,31 +12,37 @@ export const CategoriesThemes = styled.div`
 `;
 
 export const CategoriesParagraph = styled.p`
+  font-family: ${(props) => props.theme.fonts.family};
+  font-weight: ${(props) => props.theme.fonts.weight.semibold};
+  font-style: normal;
+  font-size: ${(props) => props.theme.fonts.size.normal};
+  line-height: 100%;
   margin-bottom: 14px;
 `;
 
 export const CategoriesTheme = styled.div`
   display: inline-block;
   width: auto;
-  height: 30px;
+  height: ${(props) => props.theme.sizes.buttonHeight};
   padding: 8px 20px;
-  border-radius: 24px;
+  border-radius: ${(props) => props.theme.sizes.borderRadiusLarge};
   margin-right: 7px;
   opacity: 0.4;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &.active {
+    opacity: 1;
+  }
 
   p {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 14px;
+    font-size: ${(props) => props.theme.fonts.size.normal};
+    font-weight: ${(props) => props.theme.fonts.weight.semibold};
+    line-height: ${(props) => props.theme.fonts.size.normal};
     white-space: nowrap;
   }
 `;
-
-
-
-
-
-
-
-
-
