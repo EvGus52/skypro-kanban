@@ -5,6 +5,12 @@ import { fetchTaskById, editTask, deleteTask } from "../../../services/Api";
 import { useContext } from "react";
 import { useTheme } from "../../../hooks/useTheme";
 import { TaskContext } from "../../../context/TaskContext";
+import {
+  showSuccess,
+  showError,
+  showLoading,
+  updateToast,
+} from "../../../utils/toast";
 import Calendar from "../../Calendar/Calendar";
 import {
   Overlay,
@@ -263,19 +269,22 @@ const PopBrowse = () => {
       return;
     }
 
+    let loadingToast = null;
     try {
       setEditLoading(true);
       setEditError(null);
+      loadingToast = showLoading("Сохранение изменений...");
 
       const token = localStorage.getItem("token");
       if (!token) {
+        updateToast(loadingToast, "error", "Необходимо войти в аккаунт");
         navigate("/sign-in");
         return;
       }
 
       // Валидация ID
       if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
-        setEditError("Неверный формат ID задачи");
+        updateToast(loadingToast, "error", "Неверный формат ID задачи");
         return;
       }
 
@@ -294,6 +303,8 @@ const PopBrowse = () => {
       const success = await updateTask(id, taskData);
 
       if (success) {
+        updateToast(loadingToast, "success", "Задача успешно обновлена!");
+
         // Обновляем локальные данные
         setCardData((prev) => ({
           ...prev,
@@ -304,11 +315,21 @@ const PopBrowse = () => {
         setIsEditing(false);
 
         // Закрываем модальное окно и возвращаемся на главную
-        navigate("/");
+        setTimeout(() => navigate("/"), 1000); // Небольшая задержка для показа уведомления
+      } else {
+        updateToast(loadingToast, "error", "Не удалось сохранить изменения");
       }
     } catch (err) {
       console.error("Ошибка при изменении задачи:", err);
-      setEditError(err.message);
+      if (loadingToast) {
+        updateToast(
+          loadingToast,
+          "error",
+          `Ошибка при изменении задачи: ${err.message}`
+        );
+      } else {
+        showError(`Ошибка при изменении задачи: ${err.message}`);
+      }
     } finally {
       setEditLoading(false);
     }
@@ -323,19 +344,22 @@ const PopBrowse = () => {
 
   // Подтверждение удаления
   const handleConfirmDelete = async () => {
+    let loadingToast = null;
     try {
       setDeleteLoading(true);
       setDeleteError(null);
+      loadingToast = showLoading("Удаление задачи...");
 
       const token = localStorage.getItem("token");
       if (!token) {
+        updateToast(loadingToast, "error", "Необходимо войти в аккаунт");
         navigate("/sign-in");
         return;
       }
 
       // Валидация ID
       if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
-        setDeleteError("Неверный формат ID задачи");
+        updateToast(loadingToast, "error", "Неверный формат ID задачи");
         return;
       }
 
@@ -345,13 +369,24 @@ const PopBrowse = () => {
       const success = await removeTask(id);
 
       if (success) {
+        updateToast(loadingToast, "success", "Задача успешно удалена!");
         // Закрываем модальное окно и возвращаемся на главную
         setShowDeleteModal(false);
-        navigate("/");
+        setTimeout(() => navigate("/"), 1000); // Небольшая задержка для показа уведомления
+      } else {
+        updateToast(loadingToast, "error", "Не удалось удалить задачу");
       }
     } catch (err) {
       console.error("Ошибка при удалении задачи:", err);
-      setDeleteError(err.message);
+      if (loadingToast) {
+        updateToast(
+          loadingToast,
+          "error",
+          `Ошибка при удалении задачи: ${err.message}`
+        );
+      } else {
+        showError(`Ошибка при удалении задачи: ${err.message}`);
+      }
     } finally {
       setDeleteLoading(false);
     }
@@ -703,15 +738,12 @@ const PopBrowse = () => {
             <ButtonSection className={isEditing ? "" : "hidden"}>
               {editError && <ErrorMessage>{editError}</ErrorMessage>}
               {deleteError && <ErrorMessage>{deleteError}</ErrorMessage>}
-              <ButtonGroup>
+              <ButtonGroup className="edit-buttons">
                 <ButtonEditEdit onClick={handleSaveEdit} disabled={editLoading}>
                   <a href="#" onClick={(e) => e.preventDefault()}>
                     {editLoading ? "Сохранение..." : "Сохранить"}
                   </a>
                 </ButtonEditEdit>
-                <ButtonEditClose>
-                  <Link to="/">Закрыть</Link>
-                </ButtonEditClose>
                 <ButtonEditCancel onClick={handleCancelEdit}>
                   <a href="#" onClick={(e) => e.preventDefault()}>
                     Отменить
@@ -726,6 +758,9 @@ const PopBrowse = () => {
                     {deleteLoading ? "Удаление..." : "Удалить задачу"}
                   </a>
                 </ButtonEditDelete>
+                <ButtonEditClose>
+                  <Link to="/">Закрыть</Link>
+                </ButtonEditClose>
               </ButtonGroup>
             </ButtonSection>
           </Content>

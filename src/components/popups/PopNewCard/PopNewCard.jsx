@@ -4,6 +4,12 @@ import { Colors } from "../../../Colors";
 import { useContext } from "react";
 import { useTheme } from "../../../hooks/useTheme";
 import { TaskContext } from "../../../context/TaskContext";
+import {
+  showSuccess,
+  showError,
+  showLoading,
+  updateToast,
+} from "../../../utils/toast";
 import Calendar from "../../Calendar/Calendar";
 import {
   Overlay,
@@ -112,12 +118,14 @@ const PopNewCard = () => {
       return;
     }
 
+    let loadingToast = null;
     try {
       setLoading(true);
-      setError(null);
+      loadingToast = showLoading("Создание задачи...");
 
       const token = localStorage.getItem("token");
       if (!token) {
+        updateToast(loadingToast, "error", "Необходимо войти в аккаунт");
         navigate("/sign-in");
         return;
       }
@@ -137,12 +145,23 @@ const PopNewCard = () => {
       const success = await addTask(taskData);
 
       if (success) {
+        updateToast(loadingToast, "success", "Задача успешно создана!");
         // После успешного создания задачи переходим на главную
-        navigate("/");
+        setTimeout(() => navigate("/"), 1000); // Небольшая задержка для показа уведомления
+      } else {
+        updateToast(loadingToast, "error", "Не удалось создать задачу");
       }
     } catch (err) {
       console.error("Ошибка при создании задачи:", err);
-      setError(err.message);
+      if (loadingToast) {
+        updateToast(
+          loadingToast,
+          "error",
+          `Ошибка при создании задачи: ${err.message}`
+        );
+      } else {
+        showError(`Ошибка при создании задачи: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }

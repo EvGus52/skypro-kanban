@@ -32,17 +32,19 @@ export {
   ModalValidationError as ValidationError,
 };
 
-// Переопределяем Container для применения темной темы в мобильной версии
+// Переопределяем Container для применения правильной темы в мобильной версии
 export const Container = styled(ModalContainer)`
   @media screen and (max-width: 660px) {
-    background: #20202c; /* Принудительно устанавливаем темный фон */
+    background: ${(props) =>
+      props.theme.colors.background}; /* Применяем цвет темы */
   }
 `;
 
-// Переопределяем Block для применения темной темы в мобильной версии
+// Переопределяем Block для применения правильной темы в мобильной версии
 export const Block = styled(ModalBlock)`
   @media screen and (max-width: 660px) {
-    background-color: #20202c; /* Принудительно устанавливаем темный фон */
+    background-color: ${(props) =>
+      props.theme.colors.popupBackground}; /* Применяем цвет темы */
   }
 `;
 

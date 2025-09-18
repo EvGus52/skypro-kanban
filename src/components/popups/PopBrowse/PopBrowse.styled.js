@@ -14,6 +14,12 @@ import {
   ModalMediaQueries,
 } from "../../shared/Modal.styled";
 import { FormTextarea } from "../../shared/BaseInput.styled";
+import {
+  ButtonEditEdit,
+  ButtonEditCancel,
+  ButtonEditDelete,
+  ButtonEditClose,
+} from "../../Button/Button.styled";
 
 // Экспортируем общие компоненты
 export {
@@ -27,17 +33,19 @@ export {
   ModalValidationError as ValidationError,
 };
 
-// Переопределяем Container для применения темной темы в мобильной версии
+// Переопределяем Container для применения правильной темы в мобильной версии
 export const Container = styled(ModalContainer)`
   @media screen and (max-width: 660px) {
-    background: #20202c; /* Принудительно устанавливаем темный фон */
+    background: ${(props) =>
+      props.theme.colors.background}; /* Применяем цвет темы */
   }
 `;
 
-// Переопределяем Block для применения темной темы в мобильной версии
+// Переопределяем Block для применения правильной темы в мобильной версии
 export const Block = styled(ModalBlock)`
   @media screen and (max-width: 660px) {
-    background-color: #20202c; /* Принудительно устанавливаем темный фон */
+    background-color: ${(props) =>
+      props.theme.colors.popupBackground}; /* Применяем цвет темы */
   }
 `;
 
@@ -165,6 +173,24 @@ export const ButtonGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+
+  /* Порядок кнопок для мобильной версии в режиме редактирования */
+  &.edit-buttons {
+    @media screen and (max-width: 495px) {
+      ${ButtonEditEdit} {
+        order: 1; /* Сохранить */
+      }
+      ${ButtonEditClose} {
+        order: 2; /* Закрыть */
+      }
+      ${ButtonEditCancel} {
+        order: 3; /* Отменить */
+      }
+      ${ButtonEditDelete} {
+        order: 4; /* Удалить задачу */
+      }
+    }
+  }
 
   @media screen and (max-width: 495px) {
     width: 100%;

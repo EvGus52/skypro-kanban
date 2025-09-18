@@ -45,10 +45,19 @@ export const LinkBtn = styled.a`
   margin-top: 20px;
   border-radius: 4px;
   background-color: ${(props) => props.theme.colors.primary};
-  color: ${(props) => props.theme.colors.buttonText};
   text-decoration: none;
+
+  /* Более специфичный селектор для переопределения глобальных стилей a, a:visited */
+  && {
+    color: ${(props) => props.theme.colors.buttonText};
+  }
 
   &:hover {
     background-color: ${(props) => props.theme.colors.hoverPrimary};
+  }
+
+  &:hover,
+  &:visited {
+    color: ${(props) => props.theme.colors.buttonText};
   }
 `;

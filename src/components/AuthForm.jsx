@@ -1,6 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  showSuccess,
+  showError,
+  showLoading,
+  updateToast,
+} from "../utils/toast";
+import {
   Wrapper,
   Container,
   Modal,
@@ -103,10 +109,14 @@ const AuthForm = ({ isSignUp }) => {
       return;
     }
 
-    setLoading(true);
-    setError("");
-
+    let loadingToast = null;
     try {
+      setLoading(true);
+      setError("");
+      loadingToast = showLoading(
+        isSignUp ? "Регистрация..." : "Вход в аккаунт..."
+      );
+
       // чтобы не писать две разных функции, выберем нужный запрос через
       // тернарный оператор
       const data = !isSignUp
@@ -114,14 +124,26 @@ const AuthForm = ({ isSignUp }) => {
         : await signUp(formData);
 
       if (data) {
+        updateToast(
+          loadingToast,
+          "success",
+          isSignUp ? "Регистрация успешна!" : "Добро пожаловать!"
+        );
         // Сохраняем токен в localStorage
         localStorage.setItem("token", data.token);
         // Обновляем данные пользователя в контексте
         login(data);
         // Переходим на главную страницу
-        navigate("/");
+        setTimeout(() => navigate("/"), 1000); // Небольшая задержка для показа уведомления
+      } else {
+        updateToast(loadingToast, "error", "Не удалось выполнить операцию");
       }
     } catch (err) {
+      if (loadingToast) {
+        updateToast(loadingToast, "error", err.message);
+      } else {
+        showError(err.message);
+      }
       setError(err.message);
     } finally {
       setLoading(false);
