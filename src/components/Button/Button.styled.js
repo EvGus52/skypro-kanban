@@ -28,8 +28,12 @@ export const ButtonEditClose = styled(PrimaryButton)`
   // Наследует все стили от PrimaryButton (заливка #565EEF, белый текст)
 `;
 
-export const ButtonEditEdit = styled(SecondaryButton)`
-  // Наследует все стили от SecondaryButton
+export const ButtonEditEdit = styled(PrimaryButton)`
+  // Наследует все стили от PrimaryButton (заливка #565EEF, белый текст)
+`;
+
+export const ButtonEditCancel = styled(SecondaryButton)`
+  // Наследует все стили от SecondaryButton (прозрачный фон, граница)
 `;
 
 export const ButtonEditDelete = styled(SecondaryButton)`

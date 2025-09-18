@@ -10,10 +10,31 @@ import {
 import { ModalInput } from "./shared/BaseInput.styled";
 import { FullWidthButton } from "./shared/BaseButton.styled";
 
-// Экспортируем общие компоненты
+// Переопределяем Wrapper для мобильной версии
+export const Wrapper = styled(ModalOverlay)`
+  @media screen and (max-width: 495px) {
+    background-color: ${(props) => props.theme.colors.popupBackground};
+    overflow: hidden;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+`;
+
+// Переопределяем Container для мобильной версии
+export const Container = styled(ModalContainer)`
+  @media screen and (max-width: 495px) {
+    background: ${(props) => props.theme.colors.popupBackground};
+    overflow: hidden;
+    height: 100vh;
+    padding: 0 16px;
+    justify-content: center;
+  }
+`;
+
+// Экспортируем остальные общие компоненты
 export {
-  ModalOverlay as Wrapper,
-  ModalContainer as Container,
   ModalBlock as ModalBlock,
   ModalTitle as ModalTitle,
   ModalInput as ModalInput,
@@ -46,7 +67,7 @@ export const Modal = styled.div`
   justify-content: center;
 
   @media screen and (max-width: 375px) {
-    background-color: #ffffff;
+    background-color: ${(props) => props.theme.colors.popupBackground};
   }
 `;
 
@@ -69,6 +90,7 @@ export const AuthModalBlock = styled.div`
     border-radius: 0;
     border: none;
     box-shadow: none;
+    background-color: ${(props) => props.theme.colors.popupBackground};
   }
 `;
 

@@ -18,8 +18,6 @@ import { FormTextarea } from "../../shared/BaseInput.styled";
 // Экспортируем общие компоненты
 export {
   ModalOverlay as Overlay,
-  ModalContainer as Container,
-  ModalBlock as Block,
   ModalTitle as Title,
   ModalFormWrapper as Wrap,
   ModalForm as Form,
@@ -28,6 +26,20 @@ export {
   ModalErrorMessage as ErrorMessage,
   ModalValidationError as ValidationError,
 };
+
+// Переопределяем Container для применения темной темы в мобильной версии
+export const Container = styled(ModalContainer)`
+  @media screen and (max-width: 660px) {
+    background: #20202c; /* Принудительно устанавливаем темный фон */
+  }
+`;
+
+// Переопределяем Block для применения темной темы в мобильной версии
+export const Block = styled(ModalBlock)`
+  @media screen and (max-width: 660px) {
+    background-color: #20202c; /* Принудительно устанавливаем темный фон */
+  }
+`;
 
 // Специфичные стили для PopBrowse
 export const Content = styled(ModalContent)`
@@ -43,6 +55,17 @@ export const Content = styled(ModalContent)`
   .theme-top {
     display: block;
   }
+
+  @media screen and (max-width: 495px) {
+    .theme-down {
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .theme-top {
+      display: none;
+    }
+  }
 `;
 
 export const TopBlock = styled.div`
@@ -50,10 +73,16 @@ export const TopBlock = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 18px;
+
+  @media screen and (max-width: 660px) {
+    &.browse-mode {
+      margin: 0;
+    }
+  }
 `;
 
 export const TitleInput = styled.input`
-  border: 1px solid ${(props) => props.theme.colors.inputBorder};
+  border: 1px solid transparent;
   border-radius: 4px;
   padding: 0;
   font-size: 20px;
@@ -69,14 +98,14 @@ export const TitleInput = styled.input`
 `;
 
 export const ThemeCategory = styled.div`
-  background-color: ${(props) => props.backgroundColor};
-  color: ${(props) => props.color};
-  padding: 8px 12px;
-  border-radius: 4px;
+  background-color: ${(props) => props.$backgroundColor};
+  color: ${(props) => props.$color};
+  padding: 8px 20px;
+  border-radius: ${(props) => props.theme.sizes.borderRadiusLarge};
   display: inline-block;
 
   p {
-    color: ${(props) => props.color};
+    color: ${(props) => props.$color};
     margin: 0;
   }
 `;
@@ -123,12 +152,27 @@ export const ButtonSection = styled.div`
   .btn-group button {
     margin-right: 8px;
   }
+
+  @media screen and (max-width: 495px) {
+    button {
+      width: 100%;
+      height: 40px;
+    }
+  }
 `;
 
 export const ButtonGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+
+  @media screen and (max-width: 495px) {
+    width: 100%;
+
+    button {
+      margin-right: 0px;
+    }
+  }
 `;
 
 export const DeleteModal = styled.div`
@@ -201,6 +245,19 @@ export const DeleteModalButton = styled.button`
 `;
 
 // Медиа-запросы
+// Переопределяем стили статуса для режима просмотра в мобильной версии
+export const StatusSectionBrowse = styled.div`
+  margin-bottom: 11px;
+
+  @media screen and (max-width: 660px) {
+    &.browse-mode {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+  }
+`;
+
 export const MediaQueries = styled.div`
   @media screen and (max-width: 660px) {
     ${ModalOverlay} {
@@ -230,28 +287,6 @@ export const MediaQueries = styled.div`
       max-width: 100%;
       width: 100%;
       display: block;
-    }
-
-    ${Content} .theme-down {
-      display: block;
-      margin-bottom: 20px;
-    }
-
-    ${Content} .theme-top {
-      display: none;
-    }
-
-    ${ButtonSection} button {
-      width: 100%;
-      height: 40px;
-    }
-
-    ${ButtonGroup} {
-      width: 100%;
-    }
-
-    ${ButtonGroup} button {
-      margin-right: 0px;
     }
   }
 `;

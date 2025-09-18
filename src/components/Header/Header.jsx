@@ -22,6 +22,10 @@ const Header = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
   };
 
+  const handleExitClick = () => {
+    setIsUserMenuOpen(false); // Закрываем меню при клике на "Выйти"
+  };
+
   // Закрываем меню при клике вне его
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -45,7 +49,7 @@ const Header = () => {
         <HeaderLogo className={isDarkMode ? "_dark" : "_light"}>
           <a href="" target="_self">
             <img
-              src={isDarkMode ? "images/logo_dark.png" : "/images/logo.png"}
+              src={isDarkMode ? "/images/logo_dark.png" : "/images/logo.png"}
               alt="logo"
             />
           </a>
@@ -84,7 +88,11 @@ const Header = () => {
                   onChange={toggleTheme}
                 />
               </div>
-              <button type="button" className="_hover03">
+              <button
+                type="button"
+                className="_hover03"
+                onClick={handleExitClick}
+              >
                 <a href="#popExit">Выйти</a>
               </button>
             </HeaderPopUserSet>

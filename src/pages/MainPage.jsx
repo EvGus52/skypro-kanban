@@ -6,6 +6,7 @@ import {
   closestCenter,
   KeyboardSensor,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -41,6 +42,12 @@ const MainPage = () => {
         distance: 8,
       },
     }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 300,
+        tolerance: 8,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -53,11 +60,17 @@ const MainPage = () => {
     const { active } = event;
     const activeCard = tasks.find((task) => task.id === active.id);
     setActiveCard(activeCard);
+
+    // Добавляем класс для предотвращения выделения текста
+    document.body.classList.add("dragging");
   };
 
   const handleDragEnd = async (event) => {
     const { active, over } = event;
     setActiveCard(null);
+
+    // Убираем класс после завершения drag
+    document.body.classList.remove("dragging");
 
     if (!over) return;
 
@@ -90,6 +103,9 @@ const MainPage = () => {
 
   const handleDragCancel = () => {
     setActiveCard(null);
+
+    // Убираем класс при отмене drag
+    document.body.classList.remove("dragging");
   };
 
   // Функция для отображения скелетонов загрузки

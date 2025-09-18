@@ -69,6 +69,7 @@ export const CalendarDaysNames = styled.div`
 
   @media screen and (max-width: 660px) {
     padding: 0;
+    justify-content: space-around;
   }
 `;
 
@@ -116,7 +117,9 @@ export const CalendarCell = styled.div`
   font-size: ${(props) => props.theme.fonts.size.small};
   line-height: 1;
   letter-spacing: -0.2px;
-  cursor: pointer;
+  cursor: default;
+  background-color: transparent;
+  font-weight: normal;
 
   @media screen and (max-width: 660px) {
     width: 42px;
@@ -128,22 +131,40 @@ export const CalendarCell = styled.div`
     opacity: 0;
   }
 
-  &.cell-day:hover {
-    color: ${(props) => props.theme.colors.textMuted};
-    background-color: ${(props) => props.theme.colors.calendarCellHover};
+  &.cell-day {
+    cursor: pointer;
+
+    &:hover:not(.selected) {
+      color: ${(props) => props.theme.colors.textMuted};
+      background-color: ${(props) => props.theme.colors.calendarCellHover};
+    }
+
+    /* Для мобильных устройств - активное состояние при нажатии */
+    &:active:not(.selected) {
+      color: ${(props) => props.theme.colors.textMuted};
+      background-color: ${(props) => props.theme.colors.calendarCellHover};
+    }
+
+    /* Дополнительно для touch-устройств */
+    @media (hover: none) and (pointer: coarse) {
+      &:active:not(.selected) {
+        color: ${(props) => props.theme.colors.textMuted};
+        background-color: ${(props) => props.theme.colors.calendarCellHover};
+      }
+    }
   }
 
-  &.selected {
-    background-color: ${(props) => props.theme.colors.calendarActiveDay};
-    color: ${(props) => props.theme.colors.calendarActiveDayText};
+  &.weekend {
+    color: ${(props) => props.theme.colors.textMuted};
   }
 
   &.current {
     font-weight: 700;
   }
 
-  &.weekend {
-    color: ${(props) => props.theme.colors.textMuted};
+  &.selected {
+    background-color: ${(props) => props.theme.colors.calendarActiveDay};
+    color: ${(props) => props.theme.colors.calendarActiveDayText};
   }
 `;
 

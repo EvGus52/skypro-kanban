@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Wrapper,
@@ -35,6 +35,22 @@ const AuthForm = ({ isSignUp }) => {
   // состояние текста ошибки, чтобы показать её пользователю
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Блокируем скролл в мобильной версии
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 495;
+    if (isMobile) {
+      document.body.style.overflow = "hidden";
+      document.body.style.height = "100vh";
+    }
+
+    return () => {
+      if (isMobile) {
+        document.body.style.overflow = "unset";
+        document.body.style.height = "auto";
+      }
+    };
+  }, []);
 
   // функция валидации
   const validateForm = () => {

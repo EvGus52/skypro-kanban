@@ -134,8 +134,8 @@ export const darkTheme = {
     popup: "5",
     popupNew: "6",
     popupBrowse: "7",
-    fixed: "3",
     modal: "8",
     overlay: "9",
+    fixed: "10", // Хедер должен быть поверх модальных окон
   },
 };

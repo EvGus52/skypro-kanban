@@ -21,8 +21,6 @@ import { FormButton } from "../../shared/BaseButton.styled";
 // Экспортируем общие компоненты
 export {
   ModalOverlay as Overlay,
-  ModalContainer as Container,
-  ModalBlock as Block,
   ModalContent as Content,
   ModalTitle as Title,
   ModalCloseButton as CloseButton,
@@ -33,6 +31,20 @@ export {
   ModalErrorMessage as ErrorMessage,
   ModalValidationError as ValidationError,
 };
+
+// Переопределяем Container для применения темной темы в мобильной версии
+export const Container = styled(ModalContainer)`
+  @media screen and (max-width: 660px) {
+    background: #20202c; /* Принудительно устанавливаем темный фон */
+  }
+`;
+
+// Переопределяем Block для применения темной темы в мобильной версии
+export const Block = styled(ModalBlock)`
+  @media screen and (max-width: 660px) {
+    background-color: #20202c; /* Принудительно устанавливаем темный фон */
+  }
+`;
 
 // Специфичные стили для полей ввода
 export const Input = styled(FormInput)`

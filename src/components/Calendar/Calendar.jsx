@@ -192,15 +192,6 @@ const Calendar = ({ selectedDate, onDateSelect, isEditing = true }) => {
                   dayData.isToday ? "current" : ""
                 } ${dayData.isSelected ? "selected" : ""}`}
                 onClick={() => handleDateClick(dayData)}
-                style={{
-                  cursor:
-                    isEditing && dayData.isCurrentMonth ? "pointer" : "default",
-                  backgroundColor: dayData.isSelected
-                    ? "#94A6BE"
-                    : "transparent",
-                  color: dayData.isSelected ? "white" : "#94A6BE",
-                  fontWeight: dayData.isToday ? "bold" : "normal",
-                }}
               >
                 {dayData.day}
               </CalendarCell>

@@ -30,6 +30,7 @@ import {
   DeleteModalText,
   DeleteModalButtons,
   DeleteModalButton,
+  StatusSectionBrowse,
 } from "./PopBrowse.styled";
 import {
   StatusContainer as StatusSection,
@@ -47,6 +48,7 @@ import {
   ButtonBrowseClose,
   ButtonEditClose,
   ButtonEditEdit,
+  ButtonEditCancel,
   ButtonEditDelete,
   ButtonBrowseEdit,
   ButtonBrowseDelete,
@@ -75,6 +77,15 @@ const PopBrowse = () => {
   const [deleteError, setDeleteError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
+
+  // Управление классом modal-open для скрытия фиксированной кнопки
+  useEffect(() => {
+    document.body.classList.add("modal-open");
+
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, []);
 
   // Загружаем задачу по ID
   useEffect(() => {
@@ -415,7 +426,7 @@ const PopBrowse = () => {
       <Container onClick={handleClose}>
         <Block onClick={(e) => e.stopPropagation()}>
           <Content>
-            <TopBlock>
+            <TopBlock className={!isEditing ? "browse-mode" : ""}>
               {isEditing ? (
                 <div>
                   <TitleInput
@@ -434,13 +445,13 @@ const PopBrowse = () => {
               )}
               <ThemeCategory
                 className="theme-top _active-category"
-                backgroundColor={themeColor.background}
-                color={themeColor.color}
+                $backgroundColor={themeColor.background}
+                $color={themeColor.color}
               >
                 <p>{cardData?.topic || "Web Design"}</p>
               </ThemeCategory>
             </TopBlock>
-            <StatusSection>
+            <StatusSectionBrowse className={!isEditing ? "browse-mode" : ""}>
               <StatusLabel>Статус</StatusLabel>
               {isEditing ? (
                 <StatusThemes>
@@ -599,7 +610,7 @@ const PopBrowse = () => {
                   </StatusTheme>
                 </StatusThemes>
               )}
-            </StatusSection>
+            </StatusSectionBrowse>
             <Wrap>
               <Form id="formBrowseCard" action="#">
                 <FormBlock>
@@ -645,62 +656,23 @@ const PopBrowse = () => {
             <CategoriesSection className="theme-down">
               <CategoriesLabel>Категория</CategoriesLabel>
               {isEditing ? (
-                <CategoriesThemes>
-                  <CategoryTheme
-                    className={editData.topic === "Web Design" ? "active" : ""}
-                    style={{
-                      backgroundColor:
-                        editData.topic === "Web Design"
-                          ? "#94A6BE"
-                          : Colors.orange.background,
-                      color:
-                        editData.topic === "Web Design"
-                          ? "white"
-                          : Colors.orange.color,
-                    }}
-                    onClick={() => handleEditTopicSelect("Web Design")}
-                  >
-                    <p>Web Design</p>
-                  </CategoryTheme>
-                  <CategoryTheme
-                    className={editData.topic === "Research" ? "active" : ""}
-                    style={{
-                      backgroundColor:
-                        editData.topic === "Research"
-                          ? "#94A6BE"
-                          : Colors.green.background,
-                      color:
-                        editData.topic === "Research"
-                          ? "white"
-                          : Colors.green.color,
-                    }}
-                    onClick={() => handleEditTopicSelect("Research")}
-                  >
-                    <p>Research</p>
-                  </CategoryTheme>
-                  <CategoryTheme
-                    className={editData.topic === "Copywriting" ? "active" : ""}
-                    style={{
-                      backgroundColor:
-                        editData.topic === "Copywriting"
-                          ? "#94A6BE"
-                          : Colors.purple.background,
-                      color:
-                        editData.topic === "Copywriting"
-                          ? "white"
-                          : Colors.purple.color,
-                    }}
-                    onClick={() => handleEditTopicSelect("Copywriting")}
-                  >
-                    <p>Copywriting</p>
-                  </CategoryTheme>
-                </CategoriesThemes>
+                <CategoryTheme
+                  className="_active-category"
+                  style={{
+                    backgroundColor: themeColor.background,
+                    color: themeColor.color,
+                    opacity: 1,
+                  }}
+                >
+                  <p>{editData?.topic || "Web Design"}</p>
+                </CategoryTheme>
               ) : (
                 <CategoryTheme
                   className="_active-category"
                   style={{
                     backgroundColor: themeColor.background,
                     color: themeColor.color,
+                    opacity: 1,
                   }}
                 >
                   <p>{cardData?.topic || "Web Design"}</p>
@@ -737,11 +709,14 @@ const PopBrowse = () => {
                     {editLoading ? "Сохранение..." : "Сохранить"}
                   </a>
                 </ButtonEditEdit>
-                <ButtonEditEdit onClick={handleCancelEdit}>
+                <ButtonEditClose>
+                  <Link to="/">Закрыть</Link>
+                </ButtonEditClose>
+                <ButtonEditCancel onClick={handleCancelEdit}>
                   <a href="#" onClick={(e) => e.preventDefault()}>
                     Отменить
                   </a>
-                </ButtonEditEdit>
+                </ButtonEditCancel>
                 <ButtonEditDelete
                   id="btnDelete"
                   onClick={handleDeleteTask}
@@ -752,9 +727,6 @@ const PopBrowse = () => {
                   </a>
                 </ButtonEditDelete>
               </ButtonGroup>
-              <ButtonEditClose>
-                <Link to="/">Закрыть</Link>
-              </ButtonEditClose>
             </ButtonSection>
           </Content>
         </Block>

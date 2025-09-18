@@ -5,6 +5,15 @@ export const HeaderContainer = styled.header`
   width: 100%;
   margin: 0 auto;
   background-color: ${(props) => props.theme.colors.surface};
+
+  @media screen and (max-width: 660px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: ${(props) => props.theme.zIndex.fixed};
+    width: 100vw;
+    border-bottom: 0.7px solid #94a6be66;
+  }
 `;
 
 export const HeaderBlock = styled.div`
@@ -52,6 +61,13 @@ export const HeaderBtnMainNew = styled(PrimaryButton)`
     height: ${(props) => props.theme.sizes.buttonHeightLarge};
     border-radius: ${(props) => props.theme.sizes.borderRadiusSmall};
     margin-right: 0;
+  }
+
+  /* Скрываем кнопку когда открыто модальное окно */
+  @media screen and (max-width: 660px) {
+    .modal-open & {
+      display: none;
+    }
   }
 `;
 

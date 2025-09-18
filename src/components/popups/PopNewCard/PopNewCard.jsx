@@ -47,6 +47,15 @@ const PopNewCard = () => {
   const [error, setError] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
 
+  // Управление классом modal-open для скрытия фиксированной кнопки
+  useEffect(() => {
+    document.body.classList.add("modal-open");
+
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, []);
+
   const handleClose = useCallback(() => {
     navigate("/");
   }, [navigate]);

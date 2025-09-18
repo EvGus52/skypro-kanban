@@ -58,6 +58,26 @@ export const GlobalStyles = createGlobalStyle`
     font-family: ${(props) => props.theme.fonts.family};
     color: ${(props) => props.theme.colors.text};
     background-color: ${(props) => props.theme.colors.background};
+    
+    /* Предотвращаем нежелательное поведение touch только во время drag */
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Предотвращаем выделение текста только во время drag and drop */
+  .dragging {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  
+  /* Разрешаем выделение текста в инпутах и текстовых областях */
+  input, textarea, [contenteditable] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
   }
 
   .wrapper {
