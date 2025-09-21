@@ -1,14 +1,39 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Colors } from "../../../Colors";
-import { postTask } from "../../../services/Api";
 import { useContext } from "react";
+import { useTheme } from "../../../hooks/useTheme";
 import { TaskContext } from "../../../context/TaskContext";
+import { showError, showLoading, updateToast } from "../../../utils/toast";
 import Calendar from "../../Calendar/Calendar";
+import {
+  Overlay,
+  Container,
+  Block,
+  Content,
+  Title,
+  CloseButton,
+  Wrap,
+  Form,
+  FormBlock,
+  Label,
+  Input,
+  TextArea,
+  ErrorMessage,
+  ValidationError,
+  CreateButton,
+} from "./PopNewCard.styled";
+import {
+  CategoriesContainer as CategoriesSection,
+  CategoriesParagraph as CategoriesLabel,
+  CategoriesThemes,
+  CategoriesTheme as CategoryTheme,
+} from "../../Categories/Categories.styled";
 
 const PopNewCard = () => {
   const navigate = useNavigate();
   const { addTask } = useContext(TaskContext);
+  const { isDarkMode } = useTheme();
 
   // Состояние формы
   const [formData, setFormData] = useState({
@@ -20,7 +45,15 @@ const PopNewCard = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [validationErrors, setValidationErrors] = useState({});
+
+  useEffect(() => {
+    document.body.classList.add("modal-open");
+
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, []);
 
   const handleClose = useCallback(() => {
     navigate("/");
@@ -33,6 +66,14 @@ const PopNewCard = () => {
       ...prev,
       [name]: value,
     }));
+
+    // Очищаем ошибку валидации для этого поля при изменении
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        [name]: null,
+      }));
+    }
   };
 
   // Обработка выбора категории
@@ -43,43 +84,72 @@ const PopNewCard = () => {
     }));
   };
 
+  // Валидация формы
+  const validateForm = () => {
+    const errors = {};
+
+    // Проверяем название задачи
+    if (!formData.title || formData.title.trim() === "") {
+      errors.title = "Название задачи обязательно для заполнения";
+    }
+
+    // Проверяем описание задачи
+    if (!formData.description || formData.description.trim() === "") {
+      errors.description = "Описание задачи обязательно для заполнения";
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   // Обработка отправки формы
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!validateForm()) {
+      return;
+    }
+
+    let loadingToast = null;
     try {
       setLoading(true);
-      setError(null);
+      loadingToast = showLoading("Создание задачи...");
 
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/login");
+        updateToast(loadingToast, "error", "Необходимо войти в аккаунт");
+        navigate("/sign-in");
         return;
       }
 
-      // Подготавливаем данные для отправки согласно API
       const taskData = {
-        title: formData.title || "Новая задача",
+        title: formData.title.trim(),
         topic: formData.topic || "Research",
         status: formData.status || "Без статуса",
         date: formData.date || new Date().toISOString(),
+        description: formData.description.trim(),
       };
 
-      // Добавляем описание только если оно не пустое
-      if (formData.description && formData.description.trim() !== "") {
-        taskData.description = formData.description;
-      }
-
-      console.log("Отправляем данные задачи:", taskData);
-
       // Используем addTask из контекста (автоматически обновит список)
-      await addTask(taskData);
+      const success = await addTask(taskData);
 
-      // После успешного создания задачи переходим на главную
-      navigate("/");
+      if (success) {
+        updateToast(loadingToast, "success", "Задача успешно создана!");
+        // После успешного создания задачи переходим на главную
+        setTimeout(() => navigate("/"), 1000); // Небольшая задержка для показа уведомления
+      } else {
+        updateToast(loadingToast, "error", "Не удалось создать задачу");
+      }
     } catch (err) {
-      console.error("Ошибка при создании задачи:", err);
-      setError(err.message);
+      if (loadingToast) {
+        updateToast(
+          loadingToast,
+          "error",
+          `Ошибка при создании задачи: ${err.message}`
+        );
+      } else {
+        showError(`Ошибка при создании задачи: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -105,29 +175,18 @@ const PopNewCard = () => {
   }, [handleClose]);
 
   return (
-    <div className="pop-new-card" id="popNewCard">
-      <div className="pop-new-card__container" onClick={handleClose}>
-        <div
-          className="pop-new-card__block"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="pop-new-card__content">
-            <h3 className="pop-new-card__ttl">Создание задачи</h3>
-            <Link to="/" className="pop-new-card__close">
-              &#10006;
-            </Link>
-            <div className="pop-new-card__wrap">
-              <form
-                className="pop-new-card__form form-new"
-                id="formNewCard"
-                onSubmit={handleSubmit}
-              >
-                <div className="form-new__block">
-                  <label htmlFor="formTitle" className="subttl">
-                    Название задачи
-                  </label>
-                  <input
-                    className="form-new__input"
+    <Overlay id="popNewCard">
+      <Container onClick={handleClose}>
+        <Block onClick={(e) => e.stopPropagation()}>
+          <Content>
+            <Title>Создание задачи</Title>
+            <CloseButton onClick={handleClose}>&#10006;</CloseButton>
+            <Wrap>
+              <Form id="formNewCard" onSubmit={handleSubmit}>
+                <FormBlock>
+                  <Label htmlFor="formTitle">Название задачи</Label>
+                  <Input
+                    className={validationErrors.title ? "error" : ""}
                     type="text"
                     name="title"
                     id="formTitle"
@@ -136,21 +195,27 @@ const PopNewCard = () => {
                     onChange={handleInputChange}
                     autoFocus
                   />
-                </div>
-                <div className="form-new__block">
-                  <label htmlFor="textArea" className="subttl">
-                    Описание задачи
-                  </label>
-                  <textarea
-                    className="form-new__area"
+                  {validationErrors.title && (
+                    <ValidationError>{validationErrors.title}</ValidationError>
+                  )}
+                </FormBlock>
+                <FormBlock>
+                  <Label htmlFor="textArea">Описание задачи</Label>
+                  <TextArea
+                    className={validationErrors.description ? "error" : ""}
                     name="description"
                     id="textArea"
                     placeholder="Введите описание задачи..."
                     value={formData.description}
                     onChange={handleInputChange}
-                  ></textarea>
-                </div>
-              </form>
+                  />
+                  {validationErrors.description && (
+                    <ValidationError>
+                      {validationErrors.description}
+                    </ValidationError>
+                  )}
+                </FormBlock>
+              </Form>
               <Calendar
                 selectedDate={formData.date}
                 onDateSelect={(date) => {
@@ -161,72 +226,66 @@ const PopNewCard = () => {
                 }}
                 isEditing={true}
               />
-            </div>
-            <div className="pop-new-card__categories categories">
-              <p className="categories__p subttl">Категория</p>
-              <div className="categories__themes">
-                <div
-                  className={`categories__theme ${
-                    formData.topic === "Web Design" ? "_active-category" : ""
-                  }`}
+            </Wrap>
+            <CategoriesSection>
+              <CategoriesLabel>Категория</CategoriesLabel>
+              <CategoriesThemes>
+                <CategoryTheme
+                  className={formData.topic === "Web Design" ? "active" : ""}
                   style={{
-                    backgroundColor: Colors.orange.background,
-                    color: Colors.orange.color,
+                    backgroundColor: isDarkMode
+                      ? Colors.dark.orange.background
+                      : Colors.light.orange.background,
+                    color: isDarkMode
+                      ? Colors.dark.orange.color
+                      : Colors.light.orange.color,
                   }}
                   onClick={() => handleTopicSelect("Web Design")}
                 >
-                  <p style={{ color: Colors.orange.color }}>Web Design</p>
-                </div>
-                <div
-                  className={`categories__theme ${
-                    formData.topic === "Research" ? "_active-category" : ""
-                  }`}
+                  <p>Web Design</p>
+                </CategoryTheme>
+                <CategoryTheme
+                  className={formData.topic === "Research" ? "active" : ""}
                   style={{
-                    backgroundColor: Colors.green.background,
-                    color: Colors.green.color,
+                    backgroundColor: isDarkMode
+                      ? Colors.dark.green.background
+                      : Colors.light.green.background,
+                    color: isDarkMode
+                      ? Colors.dark.green.color
+                      : Colors.light.green.color,
                   }}
                   onClick={() => handleTopicSelect("Research")}
                 >
-                  <p style={{ color: Colors.green.color }}>Research</p>
-                </div>
-                <div
-                  className={`categories__theme ${
-                    formData.topic === "Copywriting" ? "_active-category" : ""
-                  }`}
+                  <p>Research</p>
+                </CategoryTheme>
+                <CategoryTheme
+                  className={formData.topic === "Copywriting" ? "active" : ""}
                   style={{
-                    backgroundColor: Colors.purple.background,
-                    color: Colors.purple.color,
+                    backgroundColor: isDarkMode
+                      ? Colors.dark.purple.background
+                      : Colors.light.purple.background,
+                    color: isDarkMode
+                      ? Colors.dark.purple.color
+                      : Colors.light.purple.color,
                   }}
                   onClick={() => handleTopicSelect("Copywriting")}
                 >
-                  <p style={{ color: Colors.purple.color }}>Copywriting</p>
-                </div>
-              </div>
-            </div>
-            {error && (
-              <div
-                style={{
-                  color: "red",
-                  marginBottom: "10px",
-                  textAlign: "center",
-                }}
-              >
-                {error}
-              </div>
-            )}
-            <button
-              className="form-new__create _hover01"
+                  <p>Copywriting</p>
+                </CategoryTheme>
+              </CategoriesThemes>
+            </CategoriesSection>
+            <CreateButton
               id="btnCreate"
               type="submit"
               form="formNewCard"
               disabled={loading}
             >
               {loading ? "Создание..." : "Создать задачу"}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+            </CreateButton>
+          </Content>
+        </Block>
+      </Container>
+    </Overlay>
   );
 };
 

@@ -1,20 +1,59 @@
 import styled from "styled-components";
+import {
+  ModalOverlay,
+  ModalContainer,
+  ModalBlock,
+  ModalTitle,
+  ModalForm as BaseModalForm,
+} from "./shared/Modal.styled";
+import { ModalInput } from "./shared/BaseInput.styled";
+import { FullWidthButton } from "./shared/BaseButton.styled";
 
-export const Wrapper = styled.div`
+// Переопределяем Wrapper для мобильной версии
+export const Wrapper = styled(ModalOverlay)`
+  @media screen and (max-width: 495px) {
+    background-color: ${(props) => props.theme.colors.popupBackground};
+    overflow: hidden;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+`;
+
+// Переопределяем Container для мобильной версии
+export const Container = styled(ModalContainer)`
+  @media screen and (max-width: 495px) {
+    background: ${(props) => props.theme.colors.popupBackground};
+    overflow: hidden;
+    height: 100vh;
+    padding: 0 16px;
+    justify-content: center;
+  }
+`;
+
+// Экспортируем остальные общие компоненты
+export {
+  ModalBlock as ModalBlock,
+  ModalTitle as ModalTitle,
+  ModalInput as ModalInput,
+};
+
+// Переопределяем ModalForm для добавления gap между инпутами
+export const ModalForm = styled(BaseModalForm)`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 370px;
   width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  background-color: #eaeef6;
+  margin-bottom: 20px;
+
+  @media screen and (max-width: 660px) {
+    max-width: 100%;
+  }
 `;
 
-export const Container = styled.div`
-  display: block;
-  width: 100vw;
-  min-height: 100vh;
-  margin: 0 auto;
-`;
-
+// Модальное окно для авторизации
 export const Modal = styled.div`
   width: 100%;
   height: 100%;
@@ -26,96 +65,53 @@ export const Modal = styled.div`
   justify-content: center;
 
   @media screen and (max-width: 375px) {
-    background-color: #ffffff;
+    background-color: ${(props) => props.theme.colors.popupBackground};
   }
 `;
 
-export const ModalBlock = styled.div`
+// Специальный блок модального окна для авторизации
+export const AuthModalBlock = styled.div`
   display: block;
   margin: 0 auto;
-  background-color: #ffffff;
+  background-color: ${(props) => props.theme.colors.popupBackground};
   max-width: 368px;
   width: 100%;
   padding: 50px 60px;
   border-radius: 10px;
-  border: 0.7px solid #d4dbe5;
-  box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
+  border: 0.7px solid ${(props) => props.theme.colors.border};
+  box-shadow: ${(props) => props.theme.colors.shadow};
 
   @media screen and (max-width: 375px) {
     max-width: 368px;
     width: 100%;
     padding: 0 16px;
-    border-radius: none;
+    border-radius: 0;
     border: none;
     box-shadow: none;
+    background-color: ${(props) => props.theme.colors.popupBackground};
   }
 `;
 
-export const ModalTitle = styled.div`
-  h2 {
-    text-align: center;
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 30px;
-    letter-spacing: -0.6px;
-    margin-bottom: 20px;
-  }
-`;
-
-export const ModalForm = styled.form`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  input:first-child,
-  input:not(:last-child) {
-    margin-bottom: 7px;
-  }
-`;
-
-export const ModalInput = styled.input`
-  width: 100%;
-  min-width: 100%;
-  border-radius: 8px;
-  border: 0.7px solid rgba(148, 166, 190, 0.4);
-  outline: none;
-  padding: 10px 8px;
-
-  &::placeholder {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 21px;
-    letter-spacing: -0.28px;
-    color: #94a6be;
-  }
-`;
-
-export const PrimaryBtn = styled.button`
-  width: 100%;
-  height: 30px;
-  background-color: #565eef;
-  border-radius: 4px;
+// Кнопка (используем FullWidthButton)
+export const PrimaryBtn = styled(FullWidthButton)`
   margin-top: 20px;
   margin-bottom: 20px;
-  border: none;
-  outline: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  line-height: 21px;
-  font-weight: 500;
-  letter-spacing: -0.14px;
-  color: #ffffff;
+  height: 30px;
+  border-radius: 4px;
 
   @media screen and (max-width: 375px) {
     height: 40px;
   }
 `;
 
+// Заголовок модального окна авторизации (наследует от ModalTitle)
+export const AuthModalTitle = styled(ModalTitle)`
+  text-align: center;
+  font-weight: ${(props) => props.theme.fonts.weight.bold};
+  letter-spacing: -0.6px;
+`;
+
+// Группа формы
 export const FormGroup = styled.div`
   text-align: center;
 

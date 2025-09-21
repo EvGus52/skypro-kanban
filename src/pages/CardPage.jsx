@@ -23,7 +23,6 @@ const CardPage = () => {
         const data = await fetchTaskById({ token, id });
         setCardData(data);
       } catch (err) {
-        console.error("Ошибка загрузки карточки:", err);
         setError(err.message);
       } finally {
         setLoading(false);

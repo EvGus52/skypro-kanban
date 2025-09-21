@@ -1,17 +1,23 @@
 import React from "react";
+import "react-toastify/dist/ReactToastify.css";
 import { GlobalStyles } from "./GlobalStyles";
 import AppRoutes from "./routes/AppRoutes";
 import AuthProvider from "./context/AuthProvider";
 import { TaskProvider } from "./context/TaskContextProvider";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
+import ToastProvider from "./components/ToastProvider";
 
 const App = () => {
   return (
-    <AuthProvider>
-      <TaskProvider>
-        <GlobalStyles />
-        <AppRoutes />
-      </TaskProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <TaskProvider>
+          <GlobalStyles />
+          <AppRoutes />
+          <ToastProvider />
+        </TaskProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

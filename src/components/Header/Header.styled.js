@@ -1,13 +1,23 @@
 import styled from "styled-components";
+import { PrimaryButton } from "../shared/BaseButton.styled";
 
 export const HeaderContainer = styled.header`
   width: 100%;
   margin: 0 auto;
-  background-color: #ffffff;
+  background-color: ${(props) => props.theme.colors.surface};
+
+  @media screen and (max-width: 660px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: ${(props) => props.theme.zIndex.fixed};
+    width: 100vw;
+    border-bottom: 0.7px solid #94a6be66;
+  }
 `;
 
 export const HeaderBlock = styled.div`
-  height: 70px;
+  height: ${(props) => props.theme.sizes.headerHeight};
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
@@ -32,41 +42,31 @@ export const HeaderNav = styled.nav`
   justify-content: center;
 `;
 
-export const HeaderBtnMainNew = styled.button`
+export const HeaderBtnMainNew = styled(PrimaryButton)`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 178px;
-  height: 30px;
-  border-radius: 4px;
-  background-color: #565eef;
-  color: #ffffff;
-  border: none;
-  font-size: 14px;
   line-height: 1;
-  font-weight: 500;
   margin-right: 20px;
+  margin-bottom: 0;
 
   @media screen and (max-width: 495px) {
-    z-index: 3;
+    z-index: ${(props) => props.theme.zIndex.fixed};
     position: fixed;
     left: 16px;
     bottom: 30px;
     top: auto;
     width: calc(100vw - 32px);
-    height: 40px;
-    border-radius: 4px;
+    height: ${(props) => props.theme.sizes.buttonHeightLarge};
+    border-radius: ${(props) => props.theme.sizes.borderRadiusSmall};
     margin-right: 0;
   }
 
-  a {
-    color: #ffffff;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+  @media screen and (max-width: 660px) {
+    .modal-open & {
+      display: none;
+    }
   }
 `;
 
@@ -76,9 +76,11 @@ export const HeaderUser = styled.a`
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  line-height: 20px;
-  color: #565eef;
+  font-weight: 500;
+  font-size: ${(props) => props.theme.fonts.size.normal};
+  line-height: 10px;
+  text-align: center;
+  color: ${(props) => props.theme.colors.link};
 
   &::after {
     content: "";
@@ -86,8 +88,8 @@ export const HeaderUser = styled.a`
     width: 6px;
     height: 6px;
     border-radius: 1px;
-    border-left: 1.9px solid #565eef;
-    border-bottom: 1.9px solid #565eef;
+    border-left: 1.9px solid ${(props) => props.theme.colors.link};
+    border-bottom: 1.9px solid ${(props) => props.theme.colors.link};
     transform: rotate(-45deg);
     margin: -6px 0 0 5px;
     padding: 0;
@@ -100,11 +102,91 @@ export const HeaderPopUserSet = styled.div`
   right: 0;
   width: 213px;
   height: 205px;
-  border-radius: 10px;
-  border: 0.7px solid rgba(148, 166, 190, 0.4);
-  background: #fff;
-  box-shadow: 0px 10px 39px 0px rgba(26, 56, 101, 0.21);
+  border-radius: ${(props) => props.theme.sizes.borderRadius};
+  border: 0.7px solid ${(props) => props.theme.colors.border};
+  background: ${(props) => props.theme.colors.surface};
+  box-shadow: ${(props) => props.theme.colors.shadowLight};
   padding: 34px;
   text-align: center;
-  z-index: 2;
+  z-index: ${(props) => props.theme.zIndex.dropdown};
+
+  .pop-user-set__name {
+    color: ${(props) => props.theme.colors.text};
+    font-size: ${(props) => props.theme.fonts.size.normal};
+    font-weight: ${(props) => props.theme.fonts.weight.medium};
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    margin-bottom: 4px;
+  }
+
+  .pop-user-set__mail {
+    color: ${(props) => props.theme.colors.textMuted};
+    font-size: ${(props) => props.theme.fonts.size.normal};
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    margin-bottom: 10px;
+
+    /* Обработка длинного email */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .pop-user-set__theme {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+    p {
+      color: ${(props) => props.theme.colors.text};
+      font-size: ${(props) => props.theme.fonts.size.normal};
+      line-height: 21px;
+      letter-spacing: -0.14px;
+    }
+
+    input[type="checkbox"] {
+      position: relative;
+      width: 24px;
+      height: 13px;
+      border-radius: 100px;
+      background: ${(props) => props.theme.colors.disabled};
+      outline: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background-color: ${(props) => props.theme.colors.checkboxSlider};
+        transition: ${(props) => props.theme.animations.transition};
+      }
+
+      &:checked::before {
+        left: 12px;
+      }
+    }
+  }
+
+  button {
+    width: 72px;
+    height: ${(props) => props.theme.sizes.buttonHeight};
+    background: transparent;
+    color: ${(props) => props.theme.colors.text};
+    border-radius: ${(props) => props.theme.sizes.borderRadiusSmall};
+    border: 1px solid ${(props) => props.theme.colors.link};
+    cursor: pointer;
+
+    a {
+      color: ${(props) => props.theme.colors.link};
+      text-decoration: none;
+    }
+  }
 `;

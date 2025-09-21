@@ -7,9 +7,7 @@ const NotFoundPage = () => (
       <Title>404 — Страница не найдена</Title>
       <Text>Похоже, вы перешли по неверной ссылке.</Text>
       <div>
-        <LinkBtn className="_hover01" href="/">
-          На главную
-        </LinkBtn>
+        <LinkBtn href="/">На главную</LinkBtn>
       </div>
     </Card>
   </Wrapper>
